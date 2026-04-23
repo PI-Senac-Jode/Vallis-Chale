@@ -1,0 +1,4 @@
+alinhar texto de chamado do header com o resto
+criar carrossel com a as imagem principal da header
+na parte de galeria, ao clicar na imagem ela se torna a imagem do meio(principal)
+mudar os links da navabr
