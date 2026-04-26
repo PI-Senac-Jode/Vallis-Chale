@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="styles/sections/avaliacoes.css" />
   <link rel="stylesheet" href="styles/sections/map.css" />
   <link rel="stylesheet" href="styles/sections/footer.css" />
+  <script src="./js/script.js" defer></script>
 </head>
 <body>
 
@@ -75,35 +76,67 @@
   </section>
 
   <!-- Gallery -->
-  <section class="gallery">
-    <div class="container">
-      <h2 class="section-title">GALERIA</h2>
-      <p class="section-subtitle">Veja nossas fotos aqui na galeria</p>
-      <div class="gallery__grid">
-        <div class="gallery__item">
-          <img src="./assets/img/chale-interior-2.png" alt="Interior iluminado do chalé" />
-        </div>
-        <div class="gallery__item">
-          <img src="./assets/img/chale-3.png" alt="Chalé com piscina" />
-        </div>
-        <div class="gallery__item gallery__item--center">
-          <img src="./assets/img/chale-com-piscina.png" alt="Chalé A-frame entre árvores" />
-        </div>
-        <div class="gallery__item">
-          <img src="./assets/img/interior-chale.png" alt="Fogueira noturna" />
-        </div>
-        <div class="gallery__item">
-          <img src="./assets/img/chale-interior-3.png" alt="Chalé iluminado à noite" />
-        </div>
-        <div class="gallery__item">
-          <img src="./assets/img/chale-saudade.png" alt="Chalé iluminado à noite" />
-        </div>
-        <div class="gallery__item">
-          <img src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=900&q=80" alt="Chalé iluminado à noite" />
-        </div>
+<section class="gallery">
+  <div class="container">
+    <h2 class="section-title">GALERIA</h2>
+    <p class="section-subtitle">Veja nossas fotos aqui na galeria</p>
+
+    <div class="gallery__grid">
+      <!-- Esquerda -->
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-com-piscina.png"
+          alt="Interior iluminado do chalé"
+        />
+      </div>
+
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-interior-2.png"
+          alt="Chalé com piscina"
+        />
+      </div>
+
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-interior-3.png"
+          alt="Fogueira noturna"
+        />
+      </div>
+
+      <!-- CENTRO -->
+      <div class="gallery__item gallery__item--center">
+        <img
+          id="mainImage"
+          src="./assets/img/interior-chale.png"
+          alt="Chalé A-frame entre árvores"
+        />
+      </div>
+
+      <!-- Direita -->
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-maravilha.png"
+          alt="Chalé iluminado à noite"
+        />
+      </div>
+
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-saudade.png"
+          alt="Chalé iluminado à noite"
+        />
+      </div>
+
+      <div class="gallery__item">
+        <img
+          src="./assets/img/chale-paraiso.png"
+          alt="Chalé iluminado à noite"
+        />
       </div>
     </div>
-  </section>
+  </div>
+</section> 
 
   <!-- Hospedagens -->
   <section class="hospedagens" id="hospedagens">
