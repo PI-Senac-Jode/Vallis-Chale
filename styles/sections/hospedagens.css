@@ -20,6 +20,7 @@
   flex-direction: column; /* Garante que o conteúdo fique organizado em coluna */
   justify-content: flex-end; /* Empurra o conteúdo para baixo */
   isolation: isolate;
+  cursor: pointer;
 }
 
 .chale-card__image {

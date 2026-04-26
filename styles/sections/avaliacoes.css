@@ -7,6 +7,14 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
+  transition: opacity 0.3s ease;
+}
+.avaliacoes__grid:hover .review {
+  opacity: 0.5;
+}
+.avaliacoes__grid .review:hover {
+  opacity: 1;
+  transform: scale(1.05); 
 }
 
 .review {
@@ -28,7 +36,12 @@
   border-radius: var(--radius-pill);
   background: var(--surface-container-high);
 }
-
+.review__avatar > img {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-container-high);
+}
 .review__name {
   font-weight: 600;
   font-size: var(--body-sm);

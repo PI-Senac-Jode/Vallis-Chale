@@ -1,0 +1,88 @@
+
+.left-side, .right-side {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Lado do Login */
+.login-box {
+    width: 100%;
+    max-width: 380px;
+}
+
+.login-box h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 50px;
+    border: none;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.options-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+}
+
+.option-item {
+    text-align: center;
+}
+
+.circle-select {
+    width: 25px;
+    height: 25px;
+    background: white;
+    border-radius: 50%;
+    margin: 10px auto 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    border-radius: 50px;
+    border: none;
+    background-color: var(--azul-escuro);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Lado da Imagem */
+.image-container {
+    width: 100%;
+    height: 100%;
+    max-height: 75vh; /* Altura controlada para caber na tela */
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a imagem preencher o espaço sem deformar */
+}

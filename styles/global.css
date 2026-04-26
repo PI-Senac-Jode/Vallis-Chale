@@ -104,7 +104,7 @@ p {
   font-weight: 500; /* Deixa o texto do botão um pouco mais grosso */
   letter-spacing: 0.02em; /* Pequeno espaçamento entre letras */
   border: none; /* Remove a borda padrão do botão */
-  border-radius: var(--radius-xl); /* Deixa as bordas arredondadas (estilo pílula) */
+  border-radius: var(--radius-2xl); /* Deixa as bordas arredondadas (estilo pílula) */
   cursor: pointer; /* Altera o cursor para mãozinha ao passar por cima */
   /* Define a suavidade da transição ao interagir */
   transition:
@@ -117,7 +117,7 @@ p {
 .btn-accent {
   background: linear-gradient(
     180deg,
-    #ffffff 0%,
+    #e6e3e3 0%,
     #e0e0e0 100%
   ); /* Gradiente de fundo */
   color: #08360c; /* Define a cor do texto do botão */
