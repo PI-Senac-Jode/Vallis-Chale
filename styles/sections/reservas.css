@@ -86,6 +86,7 @@
     transition: background 0.3s ease, transform 0.2s ease;
     cursor: pointer;
     border: none;
+    border-radius: var(--radius-2xl);
 }
 .btn-reserve-now:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
