@@ -16,12 +16,13 @@
   <link rel="stylesheet" href="/styles/sections/hero.css" />
   <link rel="stylesheet" href="/styles/sections/footer.css" />
   <link rel="stylesheet" href="/styles/sections/reservas.css">
-  <link rel="stylesheet" href="/styles/sections/login.css">
+  <link rel="stylesheet" href="/styles/sections/criarchale.css">
+   <link rel="stylesheet" href="/styles/sections/reservas.css">
 </head>
 <body>
       <header class="nav">
     <div class="container nav__inner">
-      <a href="/index.html" class="nav__brand">
+      <a href="../index.html" class="nav__brand">
         <span class="nav__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
         <span>Vallis <em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
       </a>
@@ -31,45 +32,63 @@
           <li><a href="#hospedagens">Chalés</a></li>
         </ul>
       </nav>
-      <a href="#" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
+      <a href="./login.html" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
     </div>
   </header>
-  <div class="container login-group">
-        <section class="left-side">
-            <div class="login-box">
-                <h1>LOGIN</h1>
-                <form action="login.php" method="POST">
+   <main class="main-content">
+        <h1>ADICIONAR/EDITAR CHALÉ</h1>
+
+        <form action="edição.php" method="POST" enctype="multipart/form-data" class="chale-form">
+            <div class="form-columns">
+                <div class="column">
                     <div class="input-group">
-                        <label>Usuário:</label>
-                        <input type="text" name="usuario" required>
+                        <label>Nome do chalé:</label>
+                        <input type="text" name="nome_chale" required>
                     </div>
 
                     <div class="input-group">
-                        <label>Senha:</label>
-                        <input type="password" name="senha" required>
+                        <label>Valor do chalé:</label>
+                        <input type="text" name="valor_chale" placeholder="R$ 0,00" required>
                     </div>
 
-                    <div class="options-container">
-                        <div class="option-item">
-                            <p>Lembrar -me</p>
-                            <div class="circle-select"></div>
-                        </div>
-                        <div class="option-item">
-                            <p>Esqueci a senha</p>
-                            <div class="circle-select"></div>
-                        </div>
+                    <div class="input-group">
+                        <label>Descrição do chalé:</label>
+                        <textarea name="descricao" rows="5"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-reserve-now">Login</button>
-                </form>
+                    <div class="input-group">
+                        <label>Escolha as tags:</label>
+                        <select name="tags">
+                            <option value="">Selecione...</option>
+                            <option value="wi-fi">Wi-Fi</option>
+                            <option value="piscina">Piscina</option>
+                            <option value="vista">Vista para Montanha</option>
+                        </select>
+                    </div>
+
+                     <div class="status-group">
+                        <label>Status:</label>
+                        <div class="radio-options">
+                            <label><input type="radio" name="status" value="ativo" checked> Ativo</label>
+                            <label><input type="radio" name="status" value="inativo"> Inativo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <label>Escolha a imagem:</label>
+                    <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                        <span class="icon">📄</span>
+                        <p>Faça upload da imagem aqui</p>
+                        <input type="file" id="file-input" name="imagem" hidden>
+                    </div>
+                </div>
             </div>
-        </section>
-         <div class="right-side">
-            <div class="image-container">
-                <img src="../assets/img/chale-interior-3.png" alt="Fachada Vallis Chalé">
-            </div>
-          </div>
-</div>
+
+            <button type="submit" class="btn btn-publicar btn-reserve-now">Publicar</button>
+        </form>
+    </main>
+
     <footer class="footer">
     <div class="container footer__grid">
       <div>

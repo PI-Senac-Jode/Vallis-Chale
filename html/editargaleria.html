@@ -16,12 +16,12 @@
   <link rel="stylesheet" href="/styles/sections/hero.css" />
   <link rel="stylesheet" href="/styles/sections/footer.css" />
   <link rel="stylesheet" href="/styles/sections/reservas.css">
-  <link rel="stylesheet" href="/styles/sections/login.css">
+  <link rel="stylesheet" href="/styles/sections/editargaleria.css">
 </head>
 <body>
       <header class="nav">
     <div class="container nav__inner">
-      <a href="/index.html" class="nav__brand">
+      <a href="../index.html" class="nav__brand">
         <span class="nav__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
         <span>Vallis <em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
       </a>
@@ -31,45 +31,25 @@
           <li><a href="#hospedagens">Chalés</a></li>
         </ul>
       </nav>
-      <a href="#" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
+      <a href="./login.html" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
     </div>
   </header>
-  <div class="container login-group">
-        <section class="left-side">
-            <div class="login-box">
-                <h1>LOGIN</h1>
-                <form action="login.php" method="POST">
-                    <div class="input-group">
-                        <label>Usuário:</label>
-                        <input type="text" name="usuario" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Senha:</label>
-                        <input type="password" name="senha" required>
-                    </div>
-
-                    <div class="options-container">
-                        <div class="option-item">
-                            <p>Lembrar -me</p>
-                            <div class="circle-select"></div>
-                        </div>
-                        <div class="option-item">
-                            <p>Esqueci a senha</p>
-                            <div class="circle-select"></div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-reserve-now">Login</button>
-                </form>
-            </div>
-        </section>
-         <div class="right-side">
-            <div class="image-container">
-                <img src="../assets/img/chale-interior-3.png" alt="Fachada Vallis Chalé">
-            </div>
-          </div>
-</div>
+      <div class="group-gallery container">
+        <h1 class="page-title">GALERIA</h1>
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+            <div class="img-placeholder"><img src="../assets/img/placeholder.png " alt=""></div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-edit btn-reserve-now" onclick="editarImagem()">Editar</button>
+            <button class="btn btn-remove btn-reserve-now" onclick="removerImagem()">Remover</button>
+            <button class="btn btn-add btn-reserve-now" onclick="adicionarImagem()">Adicionar</button>
+        </div>
+        </div>
     <footer class="footer">
     <div class="container footer__grid">
       <div>

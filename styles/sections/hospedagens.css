@@ -14,11 +14,10 @@
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-ambient);
-  /* Aumente este valor para o card ficar mais comprido */
   min-height: 450px; 
   display: flex;
-  flex-direction: column; /* Garante que o conteúdo fique organizado em coluna */
-  justify-content: flex-end; /* Empurra o conteúdo para baixo */
+  flex-direction: column;
+  justify-content: flex-end;
   isolation: isolate;
   cursor: pointer;
 }
