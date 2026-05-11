@@ -1,7 +1,13 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 alinhar texto de chamado do header com o resto - OK
 criar carrossel com a as imagem principal da header
 na parte de galeria, ao clicar na imagem ela se torna a imagem do meio(principal) -OK
+=======
+alinhar texto de chamado do header com o resto
+criar carrossel com a as imagem principal da header
+na parte de galeria, ao clicar na imagem ela se torna a imagem do meio(principal)
+>>>>>>> 73482fdbdc2062b5764fd9e31987a8044d6a9042
 =======
 alinhar texto de chamado do header com o resto
 criar carrossel com a as imagem principal da header
