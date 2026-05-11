@@ -1,80 +1,110 @@
-# Vallis-Chalé-PI
 
-```
-Vallis-Chale
-├─ backend
-│  └─ includes
-├─ config.php
-├─ database
-│  └─ banco.sql
-├─ frontEnd
-│  ├─ includes
-│  │  ├─ footer.inc.php
-│  │  └─ nav.inc.php
-│  └─ styles
-│     ├─ global.css
-│     ├─ sections
-│     │  ├─ about.css
-│     │  ├─ avaliacoes.css
-│     │  ├─ criarchale.css
-│     │  ├─ diferenciais.css
-│     │  ├─ editargaleria.css
-│     │  ├─ footer.css
-│     │  ├─ gallery.css
-│     │  ├─ hero.css
-│     │  ├─ hospedagens.css
-│     │  ├─ login.css
-│     │  ├─ map.css
-│     │  ├─ nav.css
-│     │  ├─ reservar.css
-│     │  └─ reservas.css
-│     └─ tokens.css
-├─ index.php
-├─ pages
-│  ├─ chale.php
-│  ├─ criar-chale.html
-│  ├─ editargaleria.html
-│  ├─ login.html
-│  └─ reservar.html
-├─ README.md
-├─ scripts
-│  ├─ reservar.js
-│  └─ script.js
-├─ src
-│  └─ assets
-│     └─ img
-│        ├─ bi_house.png
-│        ├─ bx_area.png
-│        ├─ cama-com-rosas.png
-│        ├─ casal-piscina.png
-│        ├─ Chale Reservation Payment-2026-05-08-224417.png
-│        ├─ chale-3.png
-│        ├─ chale-com-piscina.png
-│        ├─ chale-hero.svg
-│        ├─ chale-interior-2.png
-│        ├─ chale-interior-3.png
-│        ├─ chale-interior.png
-│        ├─ chale-maravilha.png
-│        ├─ chale-paraiso.png
-│        ├─ chale-saudade.png
-│        ├─ chale-sossego.png
-│        ├─ homem.jpg
-│        ├─ instagram.svg
-│        ├─ interior-chale.png
-│        ├─ login.svg
-│        ├─ logo-vetor-comp.svg
-│        ├─ material-symbols-light_outdoor-grill-outline.png
-│        ├─ mesa-posta.png
-│        ├─ mulher-2.jpg
-│        ├─ mulher.jpg
-│        ├─ mynaui_tv.png
-│        ├─ ph_bathtub.png
-│        ├─ piscina-vista-acima.png
-│        ├─ placeholder.png
-│        ├─ proicons_wi-fi.png
-│        ├─ seta-topico.png
-│        ├─ tiktok.svg
-│        └─ whatsapp.svg
-└─ sugestoes.txt
+<h1>Vallis-Chalé</h1>
 
-```
+## 🏔️ Vallis Chalé - Plataforma de Reservas Integrada
+<br>
+Solução web moderna para conectar locatários e consumidores, unificando visualização, reserva e pagamento em uma experiência fluida, segura e rústica.
+
+---
+
+## ⭐ Objetivo do Projeto
+<br>
+O objetivo central do Vallis Chalés é facilitar a visualização e permitir a melhor acessibilidade para a locação e reserva de chalés. Através de uma criação web de alta performance, buscamos trazer benefícios claros para ambas as pontas do processo:
+
+- Para o Locatário (Proprietário): Performance aprimorada na gestão de anúncios, reservas e recebimentos.
+
+- Para o Consumidor (Hóspede): Facilidade de navegação, visualização clara dos chalés e agilidade no processo de agendamento.
+
+---
+
+## 🛠️ Funcionalidades Chave (Core Business)
+<br>
+
+A ideia central do sistema é simplificar a jornada do usuário, removendo fricções entre o interesse e a confirmação da reserva.
+
+- Visualização e Acessibilidade: Interface intuitiva focada em destacar as qualidades rústicas e exclusivas dos chalés, facilitando a escolha do consumidor.
+
+- Reserva Atrelada ao Login: Otimização do fluxo. O usuário tem a opção de efetivar a reserva no exato momento da autenticação (login), agilizando o processo.
+
+- Pa-gamento Integrado: Inclusão de formas de pagamento diretamente no ato da reserva. Sem redirecionamentos desnecessários ou processos manuais.
+
+- Segurança e Facilidade: Foco total n- a segurança das transações financeiras e dos dados dos usuários, proporcionando uma experiência de compra tranquila e fácil.
+
+--- 
+## 💻 Linguagens/Ferramentas Utilizadas
+<br>
+
+- Layout: Figma
+
+- Frontend: HTML5, CSS3, Javascript
+
+- Backend: PHP
+
+- Banco de Dados: Xampp Mysql
+
+--- 
+
+
+##  📁 Estrutura de pastas
+<br>
+├───backend
+│   └───includes
+├───database
+├───frontEnd
+│   ├───includes
+│   └───styles
+│       └───sections
+├───pages
+├───scripts
+└───src
+    └───assets
+        └───img
+
+
+---
+
+### 📊 Diagrama do Banco de Dados
+<br>
+```mermaid
+
+erDiagram
+    CATEGORIAS_CHALE ||--o{ CHALE : "classifica"
+    CLIENTE ||--o{ RESERVA : "realiza"
+    CHALE ||--o{ RESERVA : "recebe"
+
+    CATEGORIAS_CHALE {
+        int id PK
+        string nome UK
+        text descricao
+    }
+
+    CLIENTE {
+        string cpf PK
+        string nome
+        string email UK
+    }
+
+    CHALE {
+        int id PK
+        string nome UK
+        text descricao
+        string imagem_url
+        json tags
+        decimal preco_diaria
+        tinyint capacidade_pessoas
+        boolean disponibilidade
+        int categoria_id FK
+    }
+
+    RESERVA {
+        int id PK
+        int id_chale FK
+        string id_cliente FK
+        date data_inicio
+        date data_fim
+        enum status
+        timestamp data_criacao
+        decimal valor_total
+    }```
+
+
