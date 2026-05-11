@@ -1,0 +1,138 @@
+/* Seleciona todos os elementos e seus pseudo-elementos para aplicar o box-sizing */
+*,
+*::before,
+*::after {
+  /* Define que padding e bordas farão parte da largura total do elemento */
+  box-sizing: border-box;
+}
+
+html {
+  /* Habilita rolagem suave ao clicar em links internos */
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0; /* Remove margem padrão do navegador */
+  font-family: var(--font-body); /* Aplica a fonte definida nas variáveis */
+  font-size: var(--body-md); /* Define o tamanho da fonte do corpo */
+  line-height: 1.6; /* Define o espaçamento entre linhas para legibilidade */
+  color: var(--on-surface); /* Define a cor do texto base */
+  background-color: var(--surface); /* Define a cor de fundo da página */
+  -webkit-font-smoothing: antialiased; /* Suaviza a renderização de fontes no Safari/Chrome */
+  text-rendering: optimizeLegibility; /* Prioriza a legibilidade na renderização de texto */
+}
+
+img {
+  max-width: 100%; /* Impede que a imagem ultrapasse a largura do contêiner */
+  display: block; /* Remove espaço extra abaixo da imagem */
+  border-radius: var(--radius-xl); /* Arredonda os cantos da imagem */
+}
+
+a {
+  color: inherit; /* Herda a cor do elemento pai */
+  text-decoration: none; /* Remove o sublinhado padrão de links */
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading); /* Aplica fonte específica para títulos */
+  font-weight: 500; /* Define a espessura da fonte */
+  color: var(--on-surface); /* Define a cor dos títulos */
+  line-height: 1.15; /* Define altura de linha mais justa para títulos */
+  letter-spacing: -0.01em; /* Ajusta o espaçamento entre letras para melhor estética */
+  margin: 0; /* Remove margem padrão dos navegadores */
+}
+
+p {
+  margin: 0 0 var(--space-4); /* Adiciona espaço apenas na parte inferior do parágrafo */
+  color: var(--on-surface-variant); /* Define cor secundária para o texto */
+}
+
+.container {
+  width: 100%; /* Ocupa toda a largura disponível */
+  max-width: var(
+    --container-max
+  ); /* Limita a largura máxima definida no sistema */
+  margin: 0 auto; /* Centraliza o contêiner horizontalmente */
+  padding: 0 var(--container-gutter); /* Adiciona respiro nas laterais */
+}
+
+.eyebrow {
+  display: inline-block; /* Permite controlar margens mantendo-se no fluxo do texto */
+  font-size: var(--label-md); /* Define tamanho para etiquetas */
+  text-transform: uppercase; /* Força o texto para letras maiúsculas */
+  letter-spacing: 0.05em; /* Aumenta espaçamento para dar ênfase */
+  color: var(--on-surface-muted); /* Define cor mais clara/suave */
+  margin-bottom: var(--space-3); /* Adiciona espaço inferior */
+}
+
+.section {
+  padding: var(--space-10) 0; /* Adiciona preenchimento superior e inferior */
+}
+
+.section-tonal {
+  background-color: var(
+    --surface-container-low
+  ); /* Aplica cor de fundo diferenciada */
+}
+
+.section-title {
+  font-size: var(
+    --display-sm
+  ); /* Define tamanho grande para títulos de seção */
+  text-align: center; /* Centraliza o título */
+  margin-bottom: var(
+    --space-3
+  ); /* Espaço entre o título e o próximo elemento */
+}
+
+.section-subtitle {
+  text-align: center; /* Centraliza o subtítulo */
+  color: var(--on-surface-variant); /* Define cor de texto secundária */
+  max-width: 48ch; /* Limita a largura para garantir leitura confortável */
+  margin: 0 auto var(--space-8); /* Centraliza e adiciona respiro inferior */
+}
+
+.btn {
+  display: inline-flex; /* Permite alinhar ícones e textos facilmente */
+  align-items: center; /* Alinha itens verticalmente ao centro */
+  justify-content: center; /* Alinha itens horizontalmente ao centro */
+  gap: var(--space-3); /* Define o espaço entre elementos dentro do botão */
+  padding: 0.35rem 4rem; /* Define o preenchimento interno (altura e largura) */
+  font-family: var(--font-body); /* Define a família da fonte */
+  font-size: var(--body-sm); /* Define tamanho da fonte do botão */
+  font-weight: 500; /* Deixa o texto do botão um pouco mais grosso */
+  letter-spacing: 0.02em; /* Pequeno espaçamento entre letras */
+  border: none; /* Remove a borda padrão do botão */
+  border-radius: var(--radius-xl); /* Deixa as bordas arredondadas (estilo pílula) */
+  cursor: pointer; /* Altera o cursor para mãozinha ao passar por cima */
+  /* Define a suavidade da transição ao interagir */
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+  text-transform: uppercase; /* Força letras maiúsculas no texto do botão */
+}
+
+.btn-accent {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #e0e0e0 100%
+  ); /* Gradiente de fundo */
+  color: #08360c; /* Define a cor do texto do botão */
+}
+
+.btn-accent:hover {
+  transform: translateY(
+    -1px
+  ); /* Move o botão levemente para cima ao passar o mouse */
+  box-shadow: var(--shadow-ambient); /* Altera a sombra ao passar o mouse */
+  background: linear-gradient(
+    180deg,
+    #e0e0e0 0%,
+    #d1d1d1 100%
+  ); /* Inverte o gradiente no hover */
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vallis Chalé — Refúgio de luxo na montanha</title>
+  <meta name="description" content="Vallis Chalé — chalés exclusivos que unem conforto moderno e natureza preservada." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles/tokens.css" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/sections/nav.css" />
+  <link rel="stylesheet" href="/styles/sections/hero.css" />
+  <link rel="stylesheet" href="/styles/sections/footer.css" />
+  <link rel="stylesheet" href="/styles/sections/reservas.css">
+  <link rel="stylesheet" href="/styles/sections/login.css">
+</head>
+<body>
+      <header class="nav">
+    <div class="container nav__inner">
+      <a href="/index.html" class="nav__brand">
+        <span class="nav__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
+        <span>Vallis <em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
+      </a>
+      <nav aria-label="Principal">
+        <ul class="nav__links">
+          <li><a href="#sobre">Sobre nós</a></li>
+          <li><a href="#hospedagens">Chalés</a></li>
+        </ul>
+      </nav>
+      <a href="#" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
+    </div>
+  </header>
+  <div class="container login-group">
+        <section class="left-side">
+            <div class="login-box">
+                <h1>LOGIN</h1>
+                <form action="login.php" method="POST">
+                    <div class="input-group">
+                        <label>Usuário:</label>
+                        <input type="text" name="usuario" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Senha:</label>
+                        <input type="password" name="senha" required>
+                    </div>
+
+                    <div class="options-container">
+                        <div class="option-item">
+                            <p>Lembrar -me</p>
+                            <div class="circle-select"></div>
+                        </div>
+                        <div class="option-item">
+                            <p>Esqueci a senha</p>
+                            <div class="circle-select"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-reserve-now">Login</button>
+                </form>
+            </div>
+        </section>
+         <div class="right-side">
+            <div class="image-container">
+                <img src="../assets/img/chale-interior-3.png" alt="Fachada Vallis Chalé">
+            </div>
+          </div>
+</div>
+    <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <a href="#" class="footer__brand">
+          <span class="footer__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
+          <span>Vallis<br><em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
+        </a>
+      </div>
+      <div class="footer__col">
+        <h4>Endereço</h4>
+        <p>R. da Felicidade, 34 Pq. José Maria</p>
+      </div>
+      <div class="footer__col">
+        <h4>Redes sociais</h4>
+        <div class="footer__socials">
+          <a href="#" aria-label="Instagram"><img src="/assets/img/instagram.svg" alt=""></a>
+          <a href="#" aria-label="WhatsApp"><img src="/assets/img/whatsapp.svg" alt=""></a>
+          <a href="#" aria-label="TikTok"><img src="/assets/img/tiktok.svg" alt=""></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>Telefone</h4>
+        <p>(11) 99999-9889</p>
+        <p>(11) 99999-9889</p>
+      </div>
+    </div>
+    <div class="container footer__legal">Desenvolvido por_Jude</div>
+  </footer>
+
+</body>
+</html>
