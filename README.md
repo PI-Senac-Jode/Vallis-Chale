@@ -52,7 +52,7 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
  ```
 Vallis-Chale/
 ├───database
-│      
+│───backend      
 ├───frontend
 │   ├───includes
 │   └───styles
