@@ -69,9 +69,6 @@ Vallis-Chale/
 ### 📊 Diagrama do Banco de Dados
 <br>
 
-### 📊 Diagrama do Banco de Dados
-<br>
-
 ```mermaid
 erDiagram
     CATEGORIAS_CHALE ||--o{ CHALE : "classifica"
