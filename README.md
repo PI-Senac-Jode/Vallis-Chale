@@ -49,10 +49,11 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 
 <br>
 
+📁 Estrutura de pastas
 
-```├───backend
-│   └───includes
+ 
 ├───database
+│      
 ├───frontend
 │   ├───includes
 │   └───styles
@@ -60,12 +61,13 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 ├───pages
 ├───scripts
 └───src
-    └───assets
-    └───img```
-
-    <br>
+└───assets
+└───img
 
 ---
+
+### 📊 Diagrama do Banco de Dados
+<br>
 
 ### 📊 Diagrama do Banco de Dados
 <br>
@@ -110,5 +112,3 @@ erDiagram
         timestamp data_criacao
         decimal valor_total
     }
-
-
