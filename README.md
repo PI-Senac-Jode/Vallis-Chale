@@ -51,7 +51,8 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 
 📁 Estrutura de pastas
 
- 
+ ```
+Vallis-Chale/
 ├───database
 │      
 ├───frontend
@@ -63,6 +64,7 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 └───src
 └───assets
 └───img
+```
 
 ---
 
