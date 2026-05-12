@@ -46,27 +46,29 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 
 
 ##  📁 Estrutura de pastas
+
 <br>
-├───backend
+
+
+```├───backend
 │   └───includes
 ├───database
-├───frontEnd
+├───frontend
 │   ├───includes
 │   └───styles
-│       └───sections
+│   └───sections
 ├───pages
 ├───scripts
 └───src
     └───assets
-        └───img
-
+    └───img```
 
 ---
 
 ### 📊 Diagrama do Banco de Dados
 <br>
-```mermaid
 
+```mermaid
 erDiagram
     CATEGORIAS_CHALE ||--o{ CHALE : "classifica"
     CLIENTE ||--o{ RESERVA : "realiza"
@@ -105,6 +107,6 @@ erDiagram
         enum status
         timestamp data_criacao
         decimal valor_total
-    }```
+    }
 
 
