@@ -51,17 +51,17 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 
  ```
 Vallis-Chale/
+├───backend
 ├───database
-│───backend      
-├───frontend
+├───frontEnd
 │   ├───includes
 │   └───styles
-│   └───sections
+│       └───sections
 ├───pages
 ├───scripts
 └───src
-└───assets
-└───img
+    └───assets
+        └───img
 ```
 
 ---
