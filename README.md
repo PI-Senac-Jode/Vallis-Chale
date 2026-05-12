@@ -49,8 +49,6 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
 
 <br>
 
-📁 Estrutura de pastas
-
  ```
 Vallis-Chale/
 ├───database
