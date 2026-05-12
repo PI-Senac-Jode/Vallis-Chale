@@ -63,6 +63,8 @@ A ideia central do sistema é simplificar a jornada do usuário, removendo fric�
     └───assets
     └───img```
 
+    <br>
+
 ---
 
 ### 📊 Diagrama do Banco de Dados
