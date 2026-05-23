@@ -1,5 +1,6 @@
+<?php require_once '../config.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,31 +11,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./styles/tokens.css" />
-  <link rel="stylesheet" href="./styles/global.css" />
-  <link rel="stylesheet" href="./styles/sections/nav.css" />
-  <link rel="stylesheet" href="./styles/sections/hero.css" />
-  <link rel="stylesheet" href="./styles/sections/footer.css" />
-  <link rel="stylesheet" href="./styles/sections/reservas.css">
-  <link rel="stylesheet" href="./styles/sections/criarchale.css">
-   <link rel="stylesheet" href="./styles/sections/reservas.css">
+  <link rel="stylesheet" href="../frontEnd/styles/tokens.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/global.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/nav.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/hero.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/footer.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/reservas.css">
+  <link rel="stylesheet" href="../frontEnd/styles/sections/criarchale.css">
+   <link rel="stylesheet" href="../frontEnd/styles/sections/reservas.css">
 </head>
 <body>
-      <header class="nav">
-    <div class="container nav__inner">
-      <a href="../index.html" class="nav__brand">
-        <span class="nav__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
-        <span>Vallis <em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
-      </a>
-      <nav aria-label="Principal">
-        <ul class="nav__links">
-          <li><a href="#sobre">Sobre nós</a></li>
-          <li><a href="#hospedagens">Chalés</a></li>
-        </ul>
-      </nav>
-      <a href="./login.html" class="nav__account" aria-label="Minha conta"><img src="/assets/img/login.svg" alt=""></a>
-    </div>
-  </header>
+
+<!-- Nav -->
+      <?php include "../frontEnd/includes/nav.inc.php"; ?>
+<!--  -->
+      
    <main class="main-content">
         <h1>ADICIONAR/EDITAR CHALÉ</h1>
 
@@ -89,34 +80,9 @@
         </form>
     </main>
 
-    <footer class="footer">
-    <div class="container footer__grid">
-      <div>
-        <a href="#" class="footer__brand">
-          <span class="footer__brand-mark" aria-hidden="true"><img src="/assets/img/logo-vetor-comp.svg" alt=""></span>
-          <span>Vallis<br><em style="font-style: normal; color: var(--secondary);">Chalé</em></span>
-        </a>
-      </div>
-      <div class="footer__col">
-        <h4>Endereço</h4>
-        <p>R. da Felicidade, 34 Pq. José Maria</p>
-      </div>
-      <div class="footer__col">
-        <h4>Redes sociais</h4>
-        <div class="footer__socials">
-          <a href="#" aria-label="Instagram"><img src="/assets/img/instagram.svg" alt=""></a>
-          <a href="#" aria-label="WhatsApp"><img src="/assets/img/whatsapp.svg" alt=""></a>
-          <a href="#" aria-label="TikTok"><img src="/assets/img/tiktok.svg" alt=""></a>
-        </div>
-      </div>
-      <div class="footer__col">
-        <h4>Telefone</h4>
-        <p>(11) 99999-9889</p>
-        <p>(11) 99999-9889</p>
-      </div>
-    </div>
-    <div class="container footer__legal">Desenvolvido por_Jude</div>
-  </footer>
+    <!-- footer -->
+ <?php include "../frontEnd/includes/footer.inc.php"; ?>
+ <!--  -->
 
 </body>
 </html>

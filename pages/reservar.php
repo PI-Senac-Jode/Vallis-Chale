@@ -1,3 +1,5 @@
+<?php require_once '../config.php'; ?>
+
 <!doctype html>
 <html lang="pt-BR">
   <head>
@@ -16,33 +18,18 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="../styles/tokens.css" />
-    <link rel="stylesheet" href="../styles/global.css" />
-    <link rel="stylesheet" href="../styles/sections/nav.css" />
-    <link rel="stylesheet" href="../styles/sections/footer.css" />
-    <link rel="stylesheet" href="../styles/sections/reservar.css" />
+    <link rel="stylesheet" href="../frontEnd/styles/tokens.css" />
+    <link rel="stylesheet" href="../frontEnd/styles/global.css" />
+    <link rel="stylesheet" href="../frontEnd/styles/sections/nav.css" />
+    <link rel="stylesheet" href="../frontEnd/styles/sections/footer.css" />
+    <link rel="stylesheet" href="../frontEnd/styles/sections/reservar.css" />
   </head>
   <body class="page-calendar">
-    <header class="nav">
-      <div class="container nav__inner">
-        <a href="../index.html" class="nav__brand">
-          <span class="nav__brand-mark" aria-hidden="true"
-            ><img src="../assets/img/logo-vetor-comp.svg" alt=""
-          /></span>
-          <span>Vallis <em style="font-style: normal; color: var(--secondary)">Chalé</em></span>
-        </a>
-        <nav aria-label="Principal">
-          <ul class="nav__links">
-            <li><a href="../index.html#sobre">Sobre nós</a></li>
-            <li><a href="./chale.html">Chalé</a></li>
-            <li><a href="./reserva.html">Reservas</a></li>
-          </ul>
-        </nav>
-        <a href="#" class="nav__account" aria-label="Minha conta"
-          ><img src="../styles/img/login.svg" alt=""
-        /></a>
-      </div>
-    </header>
+  
+  <!-- Navbar -->
+  
+  <?php include "../frontEnd/includes/nav.inc.php"; ?>
+  <!--  -->
 
     <main class="calendar-page">
       <section class="calendar-page__hero container">
@@ -119,39 +106,8 @@
       </section>
     </main>
 
-    <footer class="footer">
-      <div class="container footer__grid">
-        <div>
-          <a href="../index.html" class="footer__brand">
-            <span class="footer__brand-mark" aria-hidden="true"
-              ><img src="../assets/img/logo-vetor-comp.svg" alt=""
-            /></span>
-            <span
-              >Vallis<br /><em style="font-style: normal; color: var(--secondary)">Chalé</em></span
-            >
-          </a>
-        </div>
-        <div class="footer__col">
-          <h4>Endereço</h4>
-          <p>R. da Felicidade, 34 Pq. José Maria</p>
-        </div>
-        <div class="footer__col">
-          <h4>Redes sociais</h4>
-          <div class="footer__socials">
-            <a href="#" aria-label="Instagram"><img src="../assets/img/instagram.svg" alt="" /></a>
-            <a href="#" aria-label="WhatsApp"><img src="../assets/img/whatsapp.svg" alt="" /></a>
-            <a href="#" aria-label="TikTok"><img src="../assets/img/tiktok.svg" alt="" /></a>
-          </div>
-        </div>
-        <div class="footer__col">
-          <h4>Telefone</h4>
-          <p>(11) 99999-9889</p>
-          <p>(11) 99999-9889</p>
-        </div>
-      </div>
-      <div class="container footer__legal">Desenvolvido por_Jude</div>
-    </footer>
+    <?php include "../frontEnd/includes/footer.inc.php"; ?>
 
-    <script src="../js/reservar.js"></script>
+    <script src="<?= BASE_URL ?>/scripts/reservar.js"></script>
   </body>
 </html>

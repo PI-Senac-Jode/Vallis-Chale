@@ -11,15 +11,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="frontEnd/styles/tokens.css" />
-  <link rel="stylesheet" href="frontEnd/styles/global.css" />
-  <link rel="stylesheet" href="frontEnd/styles/sections/nav.css" />
-  <link rel="stylesheet" href="frontEnd/styles/sections/hero.css" />
-  <link rel="stylesheet" href="frontEnd/styles/sections/footer.css" />
-  <link rel="stylesheet" href="frontEnd/styles/sections/reservas.css">
+  <link rel="stylesheet" href="../frontEnd/styles/tokens.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/global.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/nav.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/hero.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/footer.css" />
+  <link rel="stylesheet" href="../frontEnd/styles/sections/reservas.css">
 </head>
 <body>
-  
+
 <?php include "../frontEnd/includes/nav.inc.php"; ?>
 
 
@@ -49,7 +49,7 @@
           <img src="../src/assets/img/proicons_wi-fi.png" alt=""> <span>Wi-fi</span>
         </div>
       </div>
-     <a href="../pages/reservar.html">
+     <a href="<?= BASE_URL ?>/pages/reservar.php">
        <button class="btn btn-reserve-now">RESERVE AGORA</button>
      </a>
     </div>
@@ -60,7 +60,7 @@
   </div>
 
 
-  <?php include "./frontEnd/includes/footer.inc.php"; ?>
+  <?php include "../frontEnd/includes/footer.inc.php"; ?>
 
 </body>
 </html>
