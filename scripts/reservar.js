@@ -19,18 +19,8 @@ const btnNext = document.getElementById('next'); // próximo mês
 
 // ====== LISTA DE MESES (para exibir no calendário) ======
 const meses = [
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ];
 
 // formatação de data no padrão brasileiro
@@ -41,7 +31,7 @@ const localeFormat = new Intl.DateTimeFormat('pt-BR', {
 });
 
 // ====== ESTADO DO CALENDÁRIO ======
-let viewDate = new Date(2026, 3, 1); // mês que está sendo exibido
+let viewDate = new Date(2026, 3, 1); // mês que está sendo exibido (Abril de 2026)
 let checkin = new Date(2026, 3, 15); // data inicial selecionada
 let checkout = new Date(2026, 3, 30); // data final selecionada
 
@@ -57,10 +47,15 @@ function dataIgual(a, b) {
   return a && b && a.getTime() === b.getTime();
 }
 
-// formata data para exibição
+// formata data para exibição visual
 function formatarData(data) {
   if (!data) return '--';
   return localeFormat.format(data);
+}
+
+// === CORREÇÃO: Adicionada a função que estava faltando no seu script ===
+function formatarMoeda(valor) {
+  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 // calcula diferença em dias entre duas datas
@@ -77,54 +72,48 @@ function obterPrecoNoite() {
 
 // ====== ATUALIZA RESUMO DA RESERVA ======
 function atualizarResumo() {
-if (checkin) {
+  // Captura os elementos do formulário PHP de forma segura
+  const inputInicio = document.getElementById('data_inicio');
+  const inputFim = document.getElementById('data_fim');
+
+  // Atualiza a entrada visual e o input do formulário PHP (se ele existir na página)
+  if (checkin) {
     checkinEl.textContent = formatarData(checkin);
-    
-    // === ADICIONE ESTA LINHA: Preenche o input do formulário PHP ===
-    document.getElementById('data_inicio').value = checkin.toISOString().split('T')[0];
+    if (inputInicio) inputInicio.value = checkin.toISOString().split('T')[0];
   } else {
     checkinEl.textContent = '-';
-    // Se limpar as datas, limpa o formulário também
-    document.getElementById('data_inicio').value = '';
-  }
-  if (checkout) {
-    checkoutEl.textContent = formatarData(checkout);
-    
-    // === ADICIONE ESTA LINHA: Preenche o input do formulário PHP ===
-    document.getElementById('data_fim').value = checkout.toISOString().split('T')[0];
-  } else {
-    checkoutEl.textContent = '-';
-    // Se limpar as datas, limpa o formulário também
-    document.getElementById('data_fim').value = '';
+    if (inputInicio) inputInicio.value = '';
   }
 
-  
-const noites = diferencaEmNoites(checkin, checkout);
+  // Atualiza a saída visual e o input do formulário PHP (se ele existir na página)
+  if (checkout) {
+    checkoutEl.textContent = formatarData(checkout);
+    if (inputFim) inputFim.value = checkout.toISOString().split('T')[0];
+  } else {
+    checkoutEl.textContent = '-';
+    if (inputFim) inputFim.value = '';
+  }
+
+  // Cálculo de noites e preço total estimado
+  const noites = diferencaEmNoites(checkin, checkout);
   if (noites > 0) {
     noitesEl.textContent = noites;
     const preco = obterPrecoNoite();
-    resumoTotalEl.textContent = formatarMoeda(noites * preco);
+    resumoTotalEl.textContent = `Total estimado: ${formatarMoeda(noites * preco)}`;
   } else {
-    noitesEl.textContent = '0';
-    resumoTotalEl.textContent = formatarMoeda(0);
+    noitesEl.textContent = '--';
+    resumoTotalEl.textContent = 'Selecione check-in e check-out para calcular o total';
   }
-  // const noites = diferencaEmNoites(checkin, checkout);
-  // noitesEl.textContent = noites || '--';
 
-  // const total = noites * obterPrecoNoite();
-
-  // // mostra total formatado ou mensagem padrão
-  // resumoTotalEl.textContent =
-  //   total > 0
-  //     ? `Total estimado: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
-  //     : 'Selecione check-in e check-out para calcular o total';
-
-  // // só libera botão se tiver período válido
-  // btnConfirmar.disabled = noites <= 0;
+  // Controla o estado do botão de confirmação (essência do script 1)
+  if (btnConfirmar) {
+    btnConfirmar.disabled = noites <= 0;
+  }
 }
 
 // ====== RENDERIZA O CALENDÁRIO ======
 function renderCalendar() {
+  if (!diasEl || !mesAnoEl) return;
   diasEl.innerHTML = ''; // limpa calendário anterior
 
   mesAnoEl.textContent = `${meses[viewDate.getMonth()]} ${viewDate.getFullYear()}`;
@@ -223,7 +212,7 @@ function salvarReserva() {
     return;
   }
 
-  // objeto da reserva
+  // objeto da reserva para armazenamento local
   const payload = {
     chale: 'Chalé Paraíso',
     checkin: checkin.toISOString(),
@@ -252,10 +241,10 @@ btnNext.addEventListener('click', () => {
 });
 
 // ====== EVENTOS GERAIS ======
-precoNoiteEl.addEventListener('input', atualizarResumo);
-btnConfirmar.addEventListener('click', salvarReserva);
-btnLimpar.addEventListener('click', limparSelecao);
+if (precoNoiteEl) precoNoiteEl.addEventListener('input', atualizarResumo);
+if (btnConfirmar) btnConfirmar.addEventListener('click', salvarReserva);
+if (btnLimpar) btnLimpar.addEventListener('click', limparSelecao);
 
-// inicialização
+// inicialização automática estável
 atualizarResumo();
 renderCalendar();

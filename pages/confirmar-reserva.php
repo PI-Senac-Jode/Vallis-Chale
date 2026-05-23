@@ -141,6 +141,24 @@
         </form>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Busca a string salva pelo calendário
+            const dadosSalvos = localStorage.getItem('vallisChaleReserva');
+            
+            if (dadosSalvos) {
+                const reserva = JSON.parse(dadosSalvos);
+                
+                // Converte as datas salvas (ISO) para o padrão 'AAAA-MM-DD' exigido pelo input date
+                if (reserva.checkin) {
+                    document.getElementById('data_inicio').value = reserva.checkin.split('T')[0];
+                }
+                if (reserva.checkout) {
+                    document.getElementById('data_fim').value = reserva.checkout.split('T')[0];
+                }
+            }
+        });
+    </script>
 
     <script src="../frontEnd/js/reservar.js"></script>
 </body>
