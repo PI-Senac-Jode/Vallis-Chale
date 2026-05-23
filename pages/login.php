@@ -1,4 +1,21 @@
-<?php require_once '../config.php'; ?>
+<?php 
+require_once '../config.php'; 
+
+// Verifica se o formulário foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $usuario = $_POST['usuario'] ?? '';
+    $senha = $_POST['senha'] ?? '';
+
+    // Valida com as constantes do config.phps
+    if ($usuario === ADMIN_USER && $senha === ADMIN_PASS) {
+        $_SESSION['admin_logado'] = true; // Cria a "chave" de acesso
+        header("Location: criar-chale.php"); // Redireciona para o painel
+        exit;
+    } else {
+        $erro = "Usuário ou senha incorretos!";
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -14,3 +14,6 @@ criar carrossel com a as imagem principal da header
 na parte de galeria, ao clicar na imagem ela se torna a imagem do meio(principal)
 >>>>>>> 73482fdbdc2062b5764fd9e31987a8044d6a9042
 mudar os links da navabr
+
+
+precisa criar a tela de confirmar a reserva de chalé para adicionar o script de processar-reserva

@@ -106,7 +106,6 @@
       </section>
     </main>
 
-    <?php include "../frontEnd/includes/footer.inc.php"; ?>
 
     <script src="<?= BASE_URL ?>/scripts/reservar.js"></script>
   </body>

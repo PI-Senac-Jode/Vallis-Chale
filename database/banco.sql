@@ -51,7 +51,7 @@ CREATE TABLE reserva (
     data_fim DATE NOT NULL,
     status VARCHAR(50),
     FOREIGN KEY (id_chale) REFERENCES chale(id),
-    FOREIGN KEY (id_cliente) REFERENCES cliente(cpf)
+    FOREIGN KEY (id_cliente) REFERENCES cliente(cpf) 
 );
 
  

@@ -1,4 +1,17 @@
-<?php require_once '../config.php'; ?>
+<?php 
+
+require_once '../config.php'; 
+
+// Se não existir a sessão 'admin_logado', chuta o usuário de volta pro login
+if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+
+?>
+<!DOCTYPE html>
+<html lang="pt-br">
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

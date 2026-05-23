@@ -77,22 +77,50 @@ function obterPrecoNoite() {
 
 // ====== ATUALIZA RESUMO DA RESERVA ======
 function atualizarResumo() {
-  checkinEl.textContent = formatarData(checkin);
-  checkoutEl.textContent = formatarData(checkout);
+if (checkin) {
+    checkinEl.textContent = formatarData(checkin);
+    
+    // === ADICIONE ESTA LINHA: Preenche o input do formulário PHP ===
+    document.getElementById('data_inicio').value = checkin.toISOString().split('T')[0];
+  } else {
+    checkinEl.textContent = '-';
+    // Se limpar as datas, limpa o formulário também
+    document.getElementById('data_inicio').value = '';
+  }
+  if (checkout) {
+    checkoutEl.textContent = formatarData(checkout);
+    
+    // === ADICIONE ESTA LINHA: Preenche o input do formulário PHP ===
+    document.getElementById('data_fim').value = checkout.toISOString().split('T')[0];
+  } else {
+    checkoutEl.textContent = '-';
+    // Se limpar as datas, limpa o formulário também
+    document.getElementById('data_fim').value = '';
+  }
 
-  const noites = diferencaEmNoites(checkin, checkout);
-  noitesEl.textContent = noites || '--';
+  
+const noites = diferencaEmNoites(checkin, checkout);
+  if (noites > 0) {
+    noitesEl.textContent = noites;
+    const preco = obterPrecoNoite();
+    resumoTotalEl.textContent = formatarMoeda(noites * preco);
+  } else {
+    noitesEl.textContent = '0';
+    resumoTotalEl.textContent = formatarMoeda(0);
+  }
+  // const noites = diferencaEmNoites(checkin, checkout);
+  // noitesEl.textContent = noites || '--';
 
-  const total = noites * obterPrecoNoite();
+  // const total = noites * obterPrecoNoite();
 
-  // mostra total formatado ou mensagem padrão
-  resumoTotalEl.textContent =
-    total > 0
-      ? `Total estimado: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
-      : 'Selecione check-in e check-out para calcular o total';
+  // // mostra total formatado ou mensagem padrão
+  // resumoTotalEl.textContent =
+  //   total > 0
+  //     ? `Total estimado: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
+  //     : 'Selecione check-in e check-out para calcular o total';
 
-  // só libera botão se tiver período válido
-  btnConfirmar.disabled = noites <= 0;
+  // // só libera botão se tiver período válido
+  // btnConfirmar.disabled = noites <= 0;
 }
 
 // ====== RENDERIZA O CALENDÁRIO ======

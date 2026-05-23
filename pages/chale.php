@@ -59,8 +59,5 @@
     </div>
   </div>
 
-
-  <?php include "../frontEnd/includes/footer.inc.php"; ?>
-
 </body>
 </html>
