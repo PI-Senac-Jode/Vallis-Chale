@@ -16,4 +16,5 @@ na parte de galeria, ao clicar na imagem ela se torna a imagem do meio(principal
 mudar os links da navabr
 
 
-precisa criar a tela de confirmar a reserva de chalé para adicionar o script de processar-reserva
+precisa efetuar teste da confirmação de reservas, tendo usuarios cadastrados.
+precisa concluir a adição de outras telas.
