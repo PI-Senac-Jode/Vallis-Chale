@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vallis Chalé - Galeria Interativa</title>
+    <link rel="stylesheet" href="galeria.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</head>
+<body>
+
+    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="carregarImagem(event)">
+
+    <div class="galeria-wrapper">
+        <h1 class="galeria-title">GALERIA</h1>
+
+        <div class="galeria-grid">
+            
+            <div class="galeria-col side-col">
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_esq_1">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_esq_2">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_esq_3">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+            </div>
+
+            <div class="galeria-col center-col">
+                <div class="galeria-item destaque" onclick="selecionarItem(this)" id="img_centro">
+                    <span class="material-symbols-outlined placeholder-icon large">image</span>
+                </div>
+            </div>
+
+            <div class="galeria-col side-col">
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_dir_1">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_dir_2">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+                <div class="galeria-item" onclick="selecionarItem(this)" id="img_dir_3">
+                    <span class="material-symbols-outlined placeholder-icon">image</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="galeria-actions">
+            <button class="btn-galeria" onclick="triggerEditar()">Editar</button>
+            <button class="btn-galeria" onclick="triggerExcluir()">Excluir</button>
+            <button class="btn-galeria" onclick="triggerCriar()">Criar</button>
+        </div>
+    </div>
+
+    <script>
+        let itemSelecionado = null;
+
+        // 1. Função para gerenciar a seleção visual dos blocos
+        function selecionarItem(elemento) {
+            if (itemSelecionado) {
+                itemSelecionado.classList.remove('selected');
+            }
+            itemSelecionado = elemento;
+            itemSelecionado.classList.add('selected');
+        }
+
+        // 2. Função Criar (Adicionar nova foto no bloco vazio selecionado)
+        function triggerCriar() {
+            if (!itemSelecionado) {
+                alert("Selecione primeiro um bloco cinza clicando sobre ele!");
+                return;
+            }
+            if (itemSelecionado.querySelector('img')) {
+                alert("Este bloco já contém uma imagem. Clique em 'Editar' se quiser alterá-la.");
+                return;
+            }
+            document.getElementById('fileInput').click();
+        }
+
+        // 3. Função Editar (Substituir foto de um bloco já preenchido)
+        function triggerEditar() {
+            if (!itemSelecionado) {
+                alert("Clique na imagem que deseja substituir primeiro.");
+                return;
+            }
+            if (!itemSelecionado.querySelector('img')) {
+                alert("Este bloco está vazio. Clique em 'Criar' para adicionar uma nova foto.");
+                return;
+            }
+            document.getElementById('fileInput').click();
+        }
+
+        // 4. Lógica de leitura do arquivo e renderização em tela
+        function carregarImagem(event) {
+            const arquivo = event.target.files[0];
+            if (arquivo && itemSelecionado) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    itemSelecionado.innerHTML = ''; // Remove o ícone placeholder cinza
+                    
+                    const novaImg = document.createElement('img');
+                    novaImg.src = e.target.result;
+                    novaImg.alt = "Imagem Galeria";
+                    
+                    itemSelecionado.appendChild(novaImg);
+                };
+                
+                reader.readAsDataURL(arquivo);
+            }
+            event.target.value = ''; // Reseta o input para futuras alterações
+        }
+
+        // 5. Função Excluir (Remove a foto e retorna o placeholder cinza)
+        function triggerExcluir() {
+            if (!itemSelecionado) {
+                alert("Selecione qual imagem deseja excluir clicando nela.");
+                return;
+            }
+            if (!itemSelecionado.querySelector('img')) {
+                alert("Este espaço já está limpo.");
+                return;
+            }
+
+            if (confirm("Deseja mesmo excluir esta imagem da galeria?")) {
+                const isDestaque = itemSelecionado.classList.contains('destaque');
+                itemSelecionado.innerHTML = `
+                    <span class="material-symbols-outlined placeholder-icon ${isDestaque ? 'large' : ''}">image</span>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

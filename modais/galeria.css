@@ -1,0 +1,142 @@
+/* ==========================================
+   RESET E CONFIGURAÇÕES DE AMBIENTE
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #F8F3EE; /* Tom bege pastel fiel */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.galeria-wrapper {
+    width: 100%;
+    max-width: 1060px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+.galeria-title {
+    font-family: 'Georgia', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1A2E26;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+/* GRID / MOSAICO (Layout em tabela fluida simétrica) */
+.galeria-grid {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 24px 0px; /* Distanciamento exato entre colunas horizontais */
+    margin-bottom: 40px;
+}
+
+.galeria-col {
+    display: table-cell;
+    vertical-align: top;
+}
+
+/* Proporções Assimétricas das Colunas */
+.side-col { width: 28%; }
+.center-col { width: 44%; }
+
+/* BLOCOS DE IMAGEM (CARDS) */
+.galeria-item {
+    background-color: #D9D9D9; /* Tom cinza padrão das imagens vazias */
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border: 3px solid transparent; /* Reserva espaço para a animação da borda */
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Configuração de altura para os blocos das laterais */
+.side-col .galeria-item {
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.side-col .galeria-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Configuração de altura para o bloco em destaque central */
+.center-col .galeria-item.destaque {
+    height: 520px; /* Alinha verticalmente com o bloco das 3 imagens laterais */
+}
+
+/* Imagens carregadas dinamicamente via JS */
+.galeria-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Customização dos ícones nativos */
+.placeholder-icon {
+    color: #B5B5B5;
+    font-size: 48px;
+    user-select: none;
+}
+
+.placeholder-icon.large {
+    font-size: 80px;
+}
+
+/* INTERATIVIDADE VISUAL (Hover e Seleção) */
+.galeria-item:hover {
+    transform: scale(1.015);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+}
+
+.galeria-item.selected {
+    border-color: #223726; /* Verde escuro do ecossistema */
+    transform: scale(1.01);
+    box-shadow: 0 0 0 4px rgba(34, 55, 38, 0.12);
+}
+
+/* ==========================================
+   BOTÕES DE AÇÃO INFERIORES
+   ========================================== */
+.galeria-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-galeria {
+    background-color: #223726; /* Cor verde musgo do Vallis Chalé */
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 0;
+    width: 210px;               /* Formato largo alongado original */
+    border-radius: 50px;       /* Formato cápsula oval */
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.btn-galeria:hover {
+    background-color: #17261A;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vallis Chalé - Adicionar/Editar</title>
+    <link rel="stylesheet" href="edição.css">
+</head>
+<body>
+
+
+    <main class="main-content">
+        <h1>ADICIONAR/EDITAR CHALÉ</h1>
+
+        <form action="edição.php" method="POST" enctype="multipart/form-data" class="chale-form">
+            <div class="form-columns">
+                <div class="column">
+                    <div class="input-group">
+                        <label>Nome do chalé:</label>
+                        <input type="text" name="nome_chale" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Valor do chalé:</label>
+                        <input type="text" name="valor_chale" placeholder="R$ 0,00" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Descrição do chalé:</label>
+                        <textarea name="descricao" rows="5"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Escolha as tags:</label>
+                        <select name="tags">
+                            <option value="">Selecione...</option>
+                            <option value="wi-fi">Wi-Fi</option>
+                            <option value="piscina">Piscina</option>
+                            <option value="vista">Vista para Montanha</option>
+                        </select>
+                    </div>
+
+                     <div class="status-group">
+                        <label>Status:</label>
+                        <div class="radio-options">
+                            <label><input type="radio" name="status" value="ativo" checked> Ativo</label>
+                            <label><input type="radio" name="status" value="inativo"> Inativo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <label>Escolha a imagem:</label>
+                    <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                        <span class="icon">📄</span>
+                        <p>Faça upload da imagem aqui</p>
+                        <input type="file" id="file-input" name="imagem" hidden>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-publicar">Publicar</button>
+        </form>
+    </main>
+
+  
+
+</body>
+</html>

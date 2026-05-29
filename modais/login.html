@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vallis Chalé - Login</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+   
+
+    <main class="split-screen">
+        
+        <section class="left-side">
+            <div class="login-box">
+                <h1>LOGIN</h1>
+                <form action="login.php" method="POST">
+                    <div class="input-group">
+                        <label>Usuário:</label>
+                        <input type="text" name="usuario" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Senha:</label>
+                        <input type="password" name="senha" required>
+                    </div>
+
+                    <div class="options-container">
+                        <div class="option-item">
+                            <p>Lembrar -me</p>
+                            <div class="circle-select"></div>
+                        </div>
+                        <div class="option-item">
+                            <p>Esqueci a senha</p>
+                            <div class="circle-select"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">LOGIN</button>
+                </form>
+            </div>
+        </section>
+
+        <aside class="right-side">
+            <div class="image-container">
+                <img src="./src/img/location.png" alt="Fachada Vallis Chalé">
+            </div>
+        </aside>
+
+    </main>
+
+    <footer class="footer-bottom">
+        Desenvolvido por: Jode
+    </footer>
+
+</body>
+</html>

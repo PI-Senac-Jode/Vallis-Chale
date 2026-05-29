@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vallis Chalé - Painel do Administrador</title>
+    <link rel="stylesheet" href="gerenciamento.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
+    <style>
+        /* Estilos complementares para novos status dinâmicos */
+        .badge.excluida {
+            background-color: #E53E3E;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <main class="container">
+        <header class="main-header">
+            <h1>Gerenciamento de Reservas</h1>
+            <p>Visualize, edite e gerencie todas as reservas dos chalés</p>
+        </header>
+
+        <section class="table-card">
+            <div class="table-actions">
+                <div class="search-box">
+                    <span class="material-symbols-outlined icon-search">search</span>
+                    <input type="text" placeholder="Buscar por nome, e-mail ou chalé...">
+                </div>
+                <button class="btn-primary" onclick="openModal('modalNovaReserva')">
+                    <span class="material-symbols-outlined">add</span> Nova Reserva
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hóspede</th>
+                            <th>Contato</th>
+                            <th>Chalé</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Hóspedes</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-reservas-body">
+                        <tr id="reserva-1">
+                            <td><strong class="nome-txt">Maria Silva</strong></td>
+                            <td>
+                                <div class="contact-info">
+                                    <span class="email-txt">maria@email.com</span>
+                                    <span class="phone-txt">(11) 98765-4321</span>
+                                </div>
+                            </td>
+                            <td class="chale-txt">Chalé 1</td>
+                            <td class="checkin-txt">14/05/2026</td>
+                            <td class="checkout-txt">17/05/2026</td>
+                            <td class="qtd-txt">4</td>
+                            <td><strong>R$ <span class="valor-txt">1.200,00</span></strong></td>
+                            <td><span class="badge confirmada status-tag">Confirmada</span></td>
+                            <td class="actions-cell">
+                                <button class="btn-action" title="Editar" onclick="abrirEditar('reserva-1')">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="btn-action" title="Excluir" onclick="abrirExcluir('reserva-1', 'Maria Silva')">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr id="reserva-2">
+                            <td><strong class="nome-txt">João Santos</strong></td>
+                            <td>
+                                <div class="contact-info">
+                                    <span class="email-txt">joao@email.com</span>
+                                    <span class="phone-txt">(21) 99876-5432</span>
+                                </div>
+                            </td>
+                            <td class="chale-txt">Chalé 3</td>
+                            <td class="checkin-txt">19/05/2026</td>
+                            <td class="checkout-txt">24/05/2026</td>
+                            <td class="qtd-txt">2</td>
+                            <td><strong>R$ <span class="valor-txt">2.000,00</span></strong></td>
+                            <td><span class="badge pendente status-tag">Pendente</span></td>
+                            <td class="actions-cell">
+                                <button class="btn-action" title="Editar" onclick="abrirEditar('reserva-2')">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button class="btn-action" title="Excluir" onclick="abrirExcluir('reserva-2', 'João Santos')">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="table-footer">
+                <p>Mostrando <span id="contador-reservas">2</span> reservas</p>
+            </footer>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="modalNovaReserva">
+        <div class="modal-card modal-form-layout">
+            <button class="modal-close-btn" onclick="closeModal('modalNovaReserva')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="modal-title">Nova Reserva</h2>
+            <p class="modal-subtitle">Adicione uma nova reserva ao sistema</p>
+
+            <form class="modal-body-form" id="formNovaReserva" onsubmit="event.preventDefault(); submitNovaReserva();">
+                <div class="input-container">
+                    <label>Nome do Hóspede</label>
+                    <input type="text" id="add-nome" placeholder="Nome completo" required>
+                </div>
+                <div class="input-container">
+                    <label>E-mail</label>
+                    <input type="email" id="add-email" placeholder="email@exemplo.com" required>
+                </div>
+                <div class="input-container">
+                    <label>Telefone</label>
+                    <input type="text" id="add-telefone" placeholder="(00) 00000-0000" required>
+                </div>
+                <div class="input-grid-2">
+                    <div class="input-container">
+                        <label>Chalé</label>
+                        <input type="text" id="add-chale" placeholder="Ex: Chalé 1" required>
+                    </div>
+                    <div class="input-container">
+                        <label>Hóspedes</label>
+                        <input type="number" id="add-qtd" placeholder="2" required>
+                    </div>
+                </div>
+                <div class="input-grid-2">
+                    <div class="input-container">
+                        <label>Check-in</label>
+                        <input type="text" id="add-checkin" placeholder="dd/mm/aaaa" required>
+                    </div>
+                    <div class="input-container">
+                        <label>Check-out</label>
+                        <input type="text" id="add-checkout" placeholder="dd/mm/aaaa" required>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <label>Valor Total (R$)</label>
+                    <input type="text" id="add-valor" placeholder="Ex: 1200.00" required>
+                </div>
+                <div class="input-container">
+                    <label>Status</label>
+                    <select class="select-field" id="add-status" required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Pendente">Pendente</option>
+                    </select>
+                </div>
+                <div class="modal-footer-actions">
+                    <button type="button" class="btn-secondary-dark" onclick="closeModal('modalNovaReserva')">Cancelar</button>
+                    <button type="submit" class="btn-primary-dark">Adicionar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalEditarReserva">
+        <div class="modal-card modal-form-layout">
+            <button class="modal-close-btn" onclick="closeModal('modalEditarReserva')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="modal-title">Editar Reserva</h2>
+            <p class="modal-subtitle">Atualize as informações da reserva</p>
+
+            <form class="modal-body-form" id="formEditarReserva" onsubmit="event.preventDefault(); submitEditarReserva();">
+                <input type="hidden" id="edit-id">
+                
+                <div class="input-container">
+                    <label>Nome do Hóspede</label>
+                    <input type="text" id="edit-nome" required>
+                </div>
+                <div class="input-container">
+                    <label>E-mail</label>
+                    <input type="email" id="edit-email" required>
+                </div>
+                <div class="input-container">
+                    <label>Telefone</label>
+                    <input type="text" id="edit-telefone" required>
+                </div>
+                <div class="input-grid-2">
+                    <div class="input-container">
+                        <label>Chalé</label>
+                        <input type="text" id="edit-chale" required>
+                    </div>
+                    <div class="input-container">
+                        <label>Hóspedes</label>
+                        <input type="number" id="edit-qtd" required>
+                    </div>
+                </div>
+                <div class="input-grid-2">
+                    <div class="input-container">
+                        <label>Check-in</label>
+                        <input type="text" id="edit-checkin" required>
+                    </div>
+                    <div class="input-container">
+                        <label>Check-out</label>
+                        <input type="text" id="edit-checkout" required>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <label>Valor Total (R$)</label>
+                    <input type="text" id="edit-valor" required>
+                </div>
+                <div class="input-container">
+                    <label>Status</label>
+                    <select class="select-field" id="edit-status" required>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Pendente">Pendente</option>
+                    </select>
+                </div>
+                <div class="modal-footer-actions">
+                    <button type="button" class="btn-secondary-dark" onclick="closeModal('modalEditarReserva')">Cancelar</button>
+                    <button type="submit" class="btn-primary-dark">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalConfirmarExclusao">
+        <div class="modal-card modal-alert-layout">
+            <h2 class="modal-title">Confirmar exclusão</h2>
+            <p class="modal-alert-text">
+                Tem certeza que deseja excluir a reserva de <span id="nome-exclusao-dinamico">Maria Silva</span>? Esta ação não pode ser desfeita.
+            </p>
+            <input type="hidden" id="excluir-id">
+            
+            <div class="modal-footer-actions">
+                <button type="button" class="btn-secondary-dark" onclick="closeModal('modalConfirmarExclusao')">Cancelar</button>
+                <button type="button" class="btn-primary-dark btn-alert-dark" onclick="submitExcluirReserva()">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        // Variável de controle para novos IDs gerados
+        let novoIdContador = 3;
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast', type);
+            
+            const icon = type === 'danger' ? 'delete_forever' : type === 'edit' ? 'published_with_changes' : 'check_circle';
+            
+            toast.innerHTML = `
+                <span class="material-symbols-outlined">${icon}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.4s ease forwards';
+                setTimeout(() => { toast.remove(); }, 400);
+            }, 3500);
+        }
+
+        // --- LÓGICA DE INCLUSÃO (NOVA RESERVA) ---
+        function submitNovaReserva() {
+            closeModal('modalNovaReserva');
+
+            // Pegar valores digitados
+            const nome = document.getElementById('add-nome').value;
+            const email = document.getElementById('add-email').value;
+            const telefone = document.getElementById('add-telefone').value;
+            const chale = document.getElementById('add-chale').value;
+            const qtd = document.getElementById('add-qtd').value;
+            const checkin = document.getElementById('add-checkin').value;
+            const checkout = document.getElementById('add-checkout').value;
+            const valor = parseFloat(document.getElementById('add-valor').value).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            const status = document.getElementById('add-status').value;
+            const badgeClass = status.toLowerCase() === 'confirmada' ? 'confirmada' : 'pendente';
+
+            const trId = 'reserva-' + novoIdContador;
+            novoIdContador++;
+
+            // Gerar a nova linha na tabela
+            const novaLinhaHTML = `
+                <tr id="${trId}">
+                    <td><strong class="nome-txt">${nome}</strong></td>
+                    <td>
+                        <div class="contact-info">
+                            <span class="email-txt">${email}</span>
+                            <span class="phone-txt">${telefone}</span>
+                        </div>
+                    </td>
+                    <td class="chale-txt">${chale}</td>
+                    <td class="checkin-txt">${checkin}</td>
+                    <td class="checkout-txt">${checkout}</td>
+                    <td class="qtd-txt">${qtd}</td>
+                    <td><strong>R$ <span class="valor-txt">${valor}</span></strong></td>
+                    <td><span class="badge ${badgeClass} status-tag">${status}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn-action" title="Editar" onclick="abrirEditar('${trId}')">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button class="btn-action" title="Excluir" onclick="abrirExcluir('${trId}', '${nome}')">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            document.getElementById('tabela-reservas-body').insertAdjacentHTML('afterbegin', novaLinhaHTML);
+            document.getElementById('formNovaReserva').reset();
+            
+            atualizarContador();
+            showToast('Nova reserva efetuada com sucesso!', 'success');
+        }
+
+        // --- LÓGICA DE PREENCHIMENTO PARA EDIÇÃO ---
+        function abrirEditar(id) {
+            const linha = document.getElementById(id);
+            
+            // Puxar os dados da linha para o formulário do modal
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-nome').value = linha.querySelector('.nome-txt').textContent;
+            document.getElementById('edit-email').value = linha.querySelector('.email-txt').textContent;
+            document.getElementById('edit-telefone').value = linha.querySelector('.phone-txt').textContent;
+            document.getElementById('edit-chale').value = linha.querySelector('.chale-txt').textContent;
+            document.getElementById('edit-qtd').value = linha.querySelector('.qtd-txt').textContent;
+            document.getElementById('edit-checkin').value = linha.querySelector('.checkin-txt').textContent;
+            document.getElementById('edit-checkout').value = linha.querySelector('.checkout-txt').textContent;
+            
+            // Remover pontos e vírgulas para o input receber apenas números limpos
+            const valorLimpo = linha.querySelector('.valor-txt').textContent.replace(/\./g, '').replace(',', '.');
+            document.getElementById('edit-valor').value = parseFloat(valorLimpo);
+            
+            document.getElementById('edit-status').value = linha.querySelector('.status-tag').textContent;
+
+            openModal('modalEditarReserva');
+        }
+
+        function submitEditarReserva() {
+            closeModal('modalEditarReserva');
+
+            const id = document.getElementById('edit-id').value;
+            const linha = document.getElementById(id);
+
+            // Atualizar os dados da linha selecionada
+            linha.querySelector('.nome-txt').textContent = document.getElementById('edit-nome').value;
+            linha.querySelector('.email-txt').textContent = document.getElementById('edit-email').value;
+            linha.querySelector('.phone-txt').textContent = document.getElementById('edit-telefone').value;
+            linha.querySelector('.chale-txt').textContent = document.getElementById('edit-chale').value;
+            linha.querySelector('.qtd-txt').textContent = document.getElementById('edit-qtd').value;
+            linha.querySelector('.checkin-txt').textContent = document.getElementById('edit-checkin').value;
+            linha.querySelector('.checkout-txt').textContent = document.getElementById('edit-checkout').value;
+            
+            const valorFormatado = parseFloat(document.getElementById('edit-valor').value).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            linha.querySelector('.valor-txt').textContent = valorFormatado;
+
+            // Atualizar o status de forma dinâmica
+            const statusTag = linha.querySelector('.status-tag');
+            const novoStatus = document.getElementById('edit-status').value;
+            statusTag.textContent = novoStatus;
+            statusTag.className = 'badge ' + (novoStatus.toLowerCase() === 'confirmada' ? 'confirmada' : 'pendente') + ' status-tag';
+
+            showToast('Alterações da reserva salvas com sucesso!', 'edit');
+        }
+
+        // --- LÓGICA DE EXCLUSÃO ---
+        function abrirExcluir(id, nomeHospede) {
+            document.getElementById('excluir-id').value = id;
+            document.getElementById('nome-exclusao-dinamico').textContent = nomeHospede;
+            openModal('modalConfirmarExclusao');
+        }
+
+        function submitExcluirReserva() {
+            closeModal('modalConfirmarExclusao');
+            
+            const id = document.getElementById('excluir-id').value;
+            const linha = document.getElementById(id);
+            const statusTag = linha.querySelector('.status-tag');
+            
+            if (statusTag) {
+                statusTag.textContent = 'Excluída';
+                statusTag.className = 'badge excluida status-tag';
+            }
+
+            showToast('Reserva excluída do sistema com sucesso.', 'danger');
+        }
+
+        // Utilitário para contar as linhas em tempo real
+        function atualizarContador() {
+            const numLinhas = document.querySelectorAll('#tabela-reservas-body tr').length;
+            document.getElementById('contador-reservas').textContent = numLinhas;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chalé Paraíso - Reserva Interativa</title>
+    <link rel="stylesheet" href="modal.css">
+</head>
+<body>
+
+    <h1 class="main-title">Chalé Paraíso</h1>
+
+    <div class="main-container">
+        
+        <div class="calendar-card">
+            <div class="calendar-header">
+                <button class="nav-arr" id="prevMonth">&lt;</button>
+                <span class="month-year" id="monthYearDisplay">Abril 2026</span>
+                <button class="nav-arr" id="nextMonth">&gt;</button>
+            </div>
+            
+            <div class="weekdays">
+                <div>DOM</div><div>SEG</div><div>TER</div><div>QUA</div><div>QUI</div><div>SEX</div><div>SÁB</div>
+            </div>
+            
+            <div class="days-grid" id="daysGrid"></div>
+        </div>
+
+        <div class="details-panel">
+            <div class="price-card">
+                <span class="price-title">Preço por Noite</span>
+                <div class="price-box">
+                    <span class="currency">R$</span>
+                    <span class="amount" id="priceAmount">450</span>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <div class="stay-info">
+                <div class="info-block">
+                    <span class="info-label">Check-in</span>
+                    <span class="info-val" id="checkinDisplay">Selecione</span>
+                </div>
+                <div class="info-block align-center">
+                    <span class="info-label">Noites</span>
+                    <span class="info-val" id="nightsDisplay">0</span>
+                </div>
+                <div class="info-block align-right">
+                    <span class="info-label">Check-out</span>
+                    <span class="info-val" id="checkoutDisplay">Selecione</span>
+                </div>
+            </div>
+
+            <button class="btn-main-reserve" id="btnOpenModal" disabled style="background-color: #CBD5E1; cursor: not-allowed;">Selecione as datas</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar Reserva</h2>
+                <button class="close-btn" id="btnCloseModal">&times;</button>
+            </div>
+            
+            <p class="modal-subtitle">Preencha seus dados para confirmar a reserva.</p>
+
+            <form id="reservaForm">
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" id="btnCancelModal">Cancelar</button>
+                    <button type="submit" class="btn btn-confirm" id="btnConfirmFinal" disabled>Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configurações do Estado Inicial do Calendário (Iniciando em Abril de 2026 como a imagem)
+        let currentDate = new Date(2026, 3, 1); 
+        let checkInDate = null;
+        let checkOutDate = null;
+        const pricePerNight = 450;
+
+        const meses = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+
+        // Elementos do DOM
+        const daysGrid = document.getElementById('daysGrid');
+        const monthYearDisplay = document.getElementById('monthYearDisplay');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        const checkinDisplay = document.getElementById('checkinDisplay');
+        const checkoutDisplay = document.getElementById('checkoutDisplay');
+        const nightsDisplay = document.getElementById('nightsDisplay');
+        const btnOpenModal = document.getElementById('btnOpenModal');
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const btnCancelModal = document.getElementById('btnCancelModal');
+        const nomeInput = document.getElementById('nome');
+        const emailInput = document.getElementById('email');
+        const cpfInput = document.getElementById('cpf');
+        const btnConfirmFinal = document.getElementById('btnConfirmFinal');
+        const reservaForm = document.getElementById('reservaForm');
+
+        // Renderiza a estrutura de dias do mês atualizado
+        function renderCalendar() {
+            daysGrid.innerHTML = '';
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            monthYearDisplay.textContent = `${meses[month]} ${year}`;
+
+            // Descobrir o primeiro dia da semana do mês e total de dias
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            // Espaços vazios para alinhar o dia inicial da semana
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyDiv = document.createElement('div');
+                daysGrid.appendChild(emptyDiv);
+            }
+
+            // Criar blocos de dias interativos
+            for (let day = 1; day <= totalDays; day++) {
+                const dayBox = document.createElement('div');
+                dayBox.classList.add('day');
+                dayBox.textContent = day;
+
+                const thisDate = new Date(year, month, day);
+
+                // Lógica de cores/estilos com base na escolha do hóspede
+                if (checkInDate && thisDate.getTime() === checkInDate.getTime()) {
+                    dayBox.classList.add('selected-edge');
+                } else if (checkOutDate && thisDate.getTime() === checkOutDate.getTime()) {
+                    dayBox.classList.add('selected-edge');
+                } else if (checkInDate && checkOutDate && thisDate > checkInDate && thisDate < checkOutDate) {
+                    dayBox.classList.add('selected-range');
+                }
+
+                // Evento de clique no dia
+                dayBox.addEventListener('click', () => handleDayClick(thisDate));
+                daysGrid.appendChild(dayBox);
+            }
+        }
+
+        // Controla a lógica de seleção de períodos (Check-in e Check-out)
+        function handleDayClick(date) {
+            if (!checkInDate || (checkInDate && checkOutDate)) {
+                // Primeira seleção ou reset de seleção anterior
+                checkInDate = date;
+                checkOutDate = null;
+            } else if (checkInDate && !checkOutDate) {
+                if (date < checkInDate) {
+                    // Se clicar numa data anterior ao check-in atual, ela vira o novo check-in
+                    checkInDate = date;
+                } else if (date.getTime() === checkInDate.getTime()) {
+                    // Evita reservar 0 noites clicando no mesmo dia
+                    return;
+                } else {
+                    // Define o check-out válido
+                    checkOutDate = date;
+                }
+            }
+            atualizarPainelInformativo();
+            renderCalendar();
+        }
+
+        // Formata as datas para exibição textual simplificada
+        function formatDateDisplay(date) {
+            if (!date) return "Selecione";
+            const dia = date.getDate();
+            const mesesAbrev = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+            return `${dia} de ${mesesAbrev[date.getMonth()]}. de ${date.getFullYear()}`;
+        }
+
+        // Atualiza a barra de noites e o botão principal de abertura da modal
+        function atualizarPainelInformativo() {
+            checkinDisplay.textContent = formatDateDisplay(checkInDate);
+            checkoutDisplay.textContent = formatDateDisplay(checkOutDate);
+
+            if (checkInDate && checkOutDate) {
+                const diffTime = Math.abs(checkOutDate - checkInDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                nightsDisplay.textContent = diffDays;
+
+                // Ativa botão de Confirmação da Reserva
+                btnOpenModal.disabled = false;
+                btnOpenModal.style.backgroundColor = "#613107";
+                btnOpenModal.style.cursor = "pointer";
+                btnOpenModal.textContent = "Confirmar Reserva";
+            } else {
+                nightsDisplay.textContent = "0";
+                btnOpenModal.disabled = true;
+                btnOpenModal.style.backgroundColor = "#CBD5E1";
+                btnOpenModal.style.cursor = "not-allowed";
+                btnOpenModal.textContent = "Selecione as datas";
+            }
+        }
+
+        // Navegação de Meses
+        prevMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        /* --- CONTROLE MODAL & MÁSCARAS --- */
+        btnOpenModal.addEventListener('click', () => {
+            if(!btnOpenModal.disabled) modalOverlay.classList.add('show');
+        });
+
+        function fecharModal() {
+            modalOverlay.classList.remove('show');
+            reservaForm.reset(); 
+            validarFormulario(); 
+        }
+
+        btnCloseModal.addEventListener('click', fecharModal);
+        btnCancelModal.addEventListener('click', fecharModal);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) fecharModal(); });
+
+        cpfInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            }
+            e.target.value = value;
+            validarFormulario();
+        });
+
+        nomeInput.addEventListener('input', validarFormulario);
+        emailInput.addEventListener('input', validarFormulario);
+
+        function validarFormulario() {
+            const nomeValido = nomeInput.value.trim() !== '';
+            const emailValido = emailInput.checkValidity() && emailInput.value !== '';
+            const cpfValido = cpfInput.value.length === 14;
+
+            if (nomeValido && emailValido && cpfValido) {
+                btnConfirmFinal.classList.add('active');
+                btnConfirmFinal.disabled = false;
+            } else {
+                btnConfirmFinal.classList.remove('active');
+                btnConfirmFinal.disabled = true;
+            }
+        }
+
+        reservaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert(`Sucesso! Sua reserva para o período de ${formatDateDisplay(checkInDate)} até ${formatDateDisplay(checkOutDate)} foi confirmada para ${nomeInput.value}.`);
+            fecharModal();
+        });
+
+        // Inicializa o calendário ao carregar a página
+        renderCalendar();
+    // Atualiza a barra de noites, o preço por diária e o botão principal
+function atualizarPainelInformativo() {
+    checkinDisplay.textContent = formatDateDisplay(checkInDate);
+    checkoutDisplay.textContent = formatDateDisplay(checkOutDate);
+
+    if (checkInDate && checkOutDate) {
+        const diffTime = Math.abs(checkOutDate - checkInDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        nightsDisplay.textContent = diffDays;
+
+        // --- REGRA DE NEGÓCIO PARA ALTERAR O VALOR DA DIÁRIA ---
+        let precoDinamico = 450; // Valor padrão para poucas noites
+
+        if (diffDays >= 14) {
+            precoDinamico = 350; // Desconto pesado para mais de 2 semanas (ex: Abril do print)
+        } else if (diffDays >= 7) {
+            precoDinamico = 400; // Desconto médio para mais de 1 semana
+        } else {
+            precoDinamico = 450; // Valor normal para estadias curtas
+        }
+
+        // Atualiza o valor impresso no card da tela
+        document.getElementById('priceAmount').textContent = precoDinamico;
+        // -------------------------------------------------------
+
+        // Ativa botão de Confirmação da Reserva
+        btnOpenModal.disabled = false;
+        btnOpenModal.style.backgroundColor = "#613107";
+        btnOpenModal.style.cursor = "pointer";
+        btnOpenModal.textContent = "Confirmar Reserva";
+    } else {
+        nightsDisplay.textContent = "0";
+        document.getElementById('priceAmount').textContent = "450"; // Volta ao preço padrão se resetar
+        btnOpenModal.disabled = true;
+        btnOpenModal.style.backgroundColor = "#CBD5E1";
+        btnOpenModal.style.cursor = "not-allowed";
+        btnOpenModal.textContent = "Selecione as datas";
+    }
+      }
+    </script>
+</body>
+</html>

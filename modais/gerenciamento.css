@@ -1,0 +1,311 @@
+/* ==========================================
+   RESET E ESTILOS DE BASE
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #F8F3EE; /* Cor bege da identidade Vallis Chalé */
+    color: #2D3748;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Navbar */
+.navbar {
+    width: 100%;
+    background-color: #F8F3EE;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1140px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand { display: flex; align-items: center; gap: 8px; }
+.logo-icon { color: #1F3322; font-size: 28px; }
+.brand-text { font-family: 'Georgia', serif; font-weight: bold; font-size: 18px; color: #2D3748; }
+.brand-highlight { color: #C49A6C; }
+.nav-links { display: flex; gap: 32px; }
+.nav-links a { text-decoration: none; color: #4A5568; font-size: 14px; font-weight: 500; }
+.nav-user .user-icon { font-size: 26px; color: #4A5568; cursor: pointer; }
+
+/* Bloco de Layout */
+.container {
+    width: 100%;
+    max-width: 1140px;
+    padding: 40px 20px;
+}
+
+.main-header h1 {
+    font-family: 'Georgia', serif;
+    color: #1A2E26;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.main-header p {
+    color: #718096;
+    font-size: 15px;
+    margin-bottom: 32px;
+}
+
+/* Bloco da Tabela */
+.table-card {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    border: 1px solid #EAEAEA;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
+.search-box {
+    position: relative;
+    flex-grow: 1;
+    max-width: 360px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 11px 16px 11px 42px;
+    background-color: #F1F3F5;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.icon-search {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7E8B9B;
+    font-size: 20px;
+}
+
+.btn-primary {
+    background-color: #1F3322;
+    color: #FFFFFF;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Detalhes da Tabela */
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+th { color: #1A2E26; font-weight: 600; padding: 14px 12px; border-bottom: 1px solid #E2E8F0; }
+td { padding: 14px 12px; border-bottom: 1px solid #F1F3F5; }
+
+.contact-info { display: flex; flex-direction: column; }
+.contact-info .phone { color: #A0AEC0; font-size: 12px; margin-top: 3px; }
+
+/* Badges */
+.badge { display: inline-block; padding: 4px 14px; border-radius: 50px; font-size: 13px; font-weight: 600; }
+.badge.confirmada { background-color: #233E33; color: #FFFFFF; }
+.badge.pendente { background-color: #EDF2F7; color: #4A5568; }
+
+.actions-cell { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-action { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #4A5568; }
+.table-footer { margin-top: 24px; font-size: 13px; color: #718096; }
+.text-right { text-align: right; }
+
+/* ==========================================
+   ARQUITETURA COMPARTILHADA DOS MODAIS
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* Escurecimento idêntico às imagens */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Ativação do modal */
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    position: relative;
+    width: 100%;
+}
+
+/* Configurações específicas para os Modais de Formulário (Nova e Editar) */
+.modal-form-layout {
+    max-width: 520px;
+    padding: 36px;
+}
+
+/* Configurações específicas para o Modal de Alerta (Excluir) */
+.modal-alert-layout {
+    max-width: 460px;
+    padding: 32px;
+}
+
+/* Componentes de Texto Internos */
+.modal-close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: transparent;
+    border: none;
+    color: #718096;
+    cursor: pointer;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1A2E26;
+    margin-bottom: 4px;
+}
+
+.modal-subtitle {
+    font-size: 13px;
+    color: #718096;
+    margin-bottom: 24px;
+}
+
+.modal-alert-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #4A5568;
+    margin-top: 12px;
+    margin-bottom: 28px;
+}
+
+/* Elementos de Formulário */
+.modal-body-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-grid-2 {
+    display: flex;
+    gap: 16px;
+}
+
+.input-grid-2 .input-container {
+    flex: 1;
+}
+
+.modal-body-form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2D3748;
+}
+
+/* Inputs das imagens: Fundo cinza suave e cantos harmônicos */
+.modal-body-form input,
+.select-field {
+    width: 100%;
+    background-color: #F4F5F6;
+    border: 1px solid transparent;
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #2D3748;
+    outline: none;
+}
+
+.modal-body-form input::placeholder {
+    color: #A0AEC0;
+}
+
+.modal-body-form input:focus,
+.select-field:focus {
+    border-color: #CBD5E0;
+    background-color: #FFFFFF;
+}
+
+/* Customização do Select */
+.select-field {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    cursor: pointer;
+    height: 43px;
+}
+
+/* Área de botões no rodapé do modal */
+.modal-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.btn-secondary-dark {
+    background-color: #FFFFFF;
+    color: #2D3748;
+    border: 1px solid #CBD5E0;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-primary-dark {
+    background-color: #223726; /* Tom exato verde musgo escuro */
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Modificador caso queira aplicar um tom diferente para o botão de exclusão */
+.btn-alert-dark {
+    background-color: #223726; /* Conforme a imagem enviada, o botão "Excluir" segue a paleta verde escura */
+}

@@ -1,0 +1,121 @@
+/* Configurações de Cores e Fontes */
+:root {
+    --bg-creme: #F5EBE4;
+    --cinza-placeholder: #D9D9D9;
+    --marrom-medio: #824915;
+    --marrom-cafe: #381B0D;
+    --texto: #1A1A1A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-creme);
+    display: flex;
+}
+
+/* Sidebar à Esquerda */
+.admin-sidebar {
+    width: 160px;
+    height: 100vh;
+    border-right: 2px solid rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+    position: fixed;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    align-items: center;
+}
+
+.sidebar-item {
+    text-decoration: none;
+    color: var(--texto);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Conteúdo Principal */
+.main-content {
+    flex: 1;
+    margin-left: 160px; /* Compensa a largura da sidebar */
+    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 2.2rem;
+    margin-bottom: 50px;
+    letter-spacing: 2px;
+}
+
+/* Grid da Galeria */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 850px;
+}
+
+/* Técnica de Seleção sem JavaScript */
+.gallery-option input[type="radio"] {
+    display: none; /* Esconde o botão de rádio */
+}
+
+.gallery-item {
+    background-color: var(--cinza-placeholder);
+    aspect-ratio: 1 / 1;
+    border-radius: 40px; /* Arredondamento idêntico à imagem */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 4px solid transparent; /* Reserva o espaço da borda */
+    transition: all 0.2s ease;
+}
+
+/* Quando o usuário clica, o input fica "checked" e o CSS aplica a borda */
+.gallery-option input[type="radio"]:checked + .gallery-item {
+    border-color: var(--marrom-medio);
+    transform: scale(0.97);
+}
+
+.icon-placeholder {
+    width: 60px;
+    height: 60px;
+    color: #999;
+}
+
+/* Botões Ovais */
+.action-buttons {
+    margin-top: 60px;
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    padding: 14px 50px;
+    border-radius: 50px;
+    border: none;
+    color: white;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-edit, .btn-remove { background-color: var(--marrom-medio); }
+.btn-add { background-color: var(--marrom-cafe); }
+
+.btn:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+}

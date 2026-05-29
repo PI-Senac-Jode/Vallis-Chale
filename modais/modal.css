@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: #F8F1EB;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #4A4A4A;
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+/* Layout em duas colunas responsivo */
+.main-container {
+    display: flex;
+    gap: 40px;
+    max-width: 960px;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* --- CARD DO CALENDÁRIO --- */
+.calendar-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.03);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.month-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: #5C3A21;
+    font-weight: 700;
+}
+
+.nav-arr {
+    background: none;
+    border: none;
+    color: #7A7A7A;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px 10px;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #C0A999;
+    margin-bottom: 12px;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 8px;
+    column-gap: 6px;
+}
+
+.day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: #4A4A4A;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.style-muted {
+    color: #D3D3D3;
+}
+
+/* Estados da seleção do calendário */
+.selected-edge {
+    background-color: #613107; /* Tom marrom escuro da imagem */
+    color: #FFFFFF !important;
+    font-weight: 700;
+}
+
+.selected-range {
+    background-color: #F3E5D8; /* Tom bege claro de intervalo */
+    color: #5C3A21;
+}
+
+/* --- DETALHES DA RESERVA (LADO DIREITO) --- */
+.details-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+}
+
+.price-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0px 10px 35px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
+}
+
+.price-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #4A4A4A;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.price-box {
+    border: 1px solid #EADCCF;
+    border-radius: 50px;
+    padding: 12px 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.currency {
+    color: #8C8C8C;
+    font-size: 1.1rem;
+}
+
+.amount {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2D2D2D;
+}
+
+.info-divider {
+    height: 1px;
+    background-color: #D6C4B5;
+    margin: 10px 0 16px 0;
+}
+
+.stay-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #8C8C8C;
+}
+
+.info-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    color: #5C3A21;
+    font-weight: 700;
+}
+
+.align-center { text-align: center; }
+.align-right { text-align: right; }
+
+.btn-main-reserve {
+    background-color: #613107;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.btn-main-reserve:hover {
+    background-color: #472304;
+}
+
+/* --- TELA DA MODAL (ESTRUTURA DE SOBREPOSIÇÃO) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4); /* Escurece o fundo de leve */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    
+    /* Escondido por padrão */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Ativa a exibição da modal */
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background-color: #FFFFFF;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-card {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.modal-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2D2D2D;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modal-subtitle {
+    font-size: 0.85rem;
+    color: #7A7A7A;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2D2D2D;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.form-group input::placeholder { color: #C0C0C0; }
+.form-group input:focus { border-color: #A0A0A0; }
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-cancel {
+    background-color: transparent;
+    border: 1px solid #E2E8F0;
+    color: #4A4A4A;
+}
+
+.btn-confirm {
+    background-color: #CBD5E1;
+    border: none;
+    color: #FFFFFF;
+    cursor: not-allowed;
+}
+
+.btn-confirm.active {
+    background-color: #613107;
+    cursor: pointer;
+}
