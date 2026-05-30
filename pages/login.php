@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Valida com as constantes do config.php
     if ($usuario === ADMIN_USER && $senha === ADMIN_PASS) {
         $_SESSION['admin_logado'] = true; // Cria a "chave" de acesso
-        header("Location: criar-chale.php"); // Redireciona para o painel
+        header("Location: gerenciamento.php"); // Redireciona para o painel
         exit;
     } else {
         $erro = "Usuário ou senha incorretos!";

@@ -1,6 +1,5 @@
-CREATE DATABASE sistema_chales;
-USE sistema_chales;
-
+CREATE DATABASE IF NOT EXISTS sistemas_chales;
+USE sistemas_chales;
  
 
 -- =========================================
