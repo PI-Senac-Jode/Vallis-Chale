@@ -27,7 +27,6 @@
   <body class="page-calendar">
   
   <!-- Navbar -->
-  
   <?php include "../frontEnd/includes/nav.inc.php"; ?>
   <!--  -->
 
@@ -106,7 +105,7 @@
       </section>
     </main>
 
-
+<?php include "../frontEnd/includes/footer.inc.php"; ?>
     <script src="<?= BASE_URL ?>/scripts/reservar.js"></script>
   </body>
 </html>

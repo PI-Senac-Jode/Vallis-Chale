@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 date_default_timezone_set('America/Sao_Paulo');
 
 
-define('BASE_URL', '/vallis-chale/');
+define('BASE_URL', '/vallis-chale');
 
 // Define os dados de acesso do administrador
 define('ADMIN_USER', 'admin');
