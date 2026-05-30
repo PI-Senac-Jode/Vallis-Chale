@@ -160,10 +160,15 @@ table {
   font-size: var(--body-sm);
 }
 
+thead tr,
+tbody tr {
+  border-bottom: 1px solid var(--outline-variant);
+}
+
 th,
 td {
   padding: 0.9rem var(--space-3);
-  border-bottom: 1px solid var(--outline-variant);
+  border-bottom: 0;
   vertical-align: middle;
 }
 
@@ -223,9 +228,12 @@ td {
 }
 
 .actions-cell {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-2);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.actions-cell .btn-action + .btn-action {
+  margin-left: var(--space-2);
 }
 
 .btn-action {
