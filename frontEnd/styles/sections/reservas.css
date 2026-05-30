@@ -1,0 +1,137 @@
+.hospedagens__grid {
+    display: flex; 
+    justify-content: space-between;
+    gap: var(--space-3); 
+    margin-bottom: var(--space-10);
+    padding: var(--space-8);
+    align-items: center;
+}
+
+.hospedagens__header {
+    display: flex;
+    margin-bottom: var(--space-3);
+    align-items: center;
+}
+
+.hospedagens__icon-title {
+    width: 35px;
+    height: 35px;
+    margin-right: var(--space-3);
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.hospedagens__title {
+    font-size: var(--display-sm);
+    font-family: var(--font-heading);
+    color: var(--on-surface);
+}
+
+.hospedagens__text {
+    max-width: 48ch;
+    margin-bottom: var(--space-4);
+}
+
+.hospedagens__amenities {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.5rem 1.5rem;
+    border: 1.5px solid var(--outline-variant);
+    border-radius: var(--radius-xl); 
+    font-size: var(--body-sm);
+    color: var(--on-surface-variant);
+    width: 270px;
+}
+.amenity-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.5rem 1.5rem;
+    border: 1.5px solid var(--outline-variant);
+    border-radius: var(--radius-xl); 
+    font-weight: 500;
+    font-size: var(--body-sm);
+    color: var(--on-surface-variant);
+    width: 270px;
+    
+    /* Transição suave para todas as propriedades */
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.amenity-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    color: var(--primary);
+}
+
+.amenity-item img {
+    width: 23px;
+    height: 23px;
+}
+
+.btn-reserve-now {
+    background: var(--primary); 
+    color: var(--on-primary);
+    padding: 1rem 4.5rem;
+    font-size: var(--body-sm);
+    transition: background 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius-2xl);
+}
+.btn-reserve-now:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px); 
+}
+
+.btn-reserve-now:active {
+    transform: scale(0.98);
+}
+
+.hospedagens__main-image {
+    width: 100%;
+    height: auto;
+    max-width: 550px;;
+    object-fit: cover;
+    box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 992px) {
+    .hospedagens__grid {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+    .hospedagens__visual {
+        order: -1; 
+    }
+     .hospedagens__content{
+        margin: var(--space-8);
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: flex-start;
+        text-align: start;
+    }
+}
+@media (max-width:768px){
+    .hospedagens__grid{
+        display: flex;
+        flex-direction: column;
+    }
+    .hospedagens__content{
+        margin: var(--space-8);
+    }
+}
+
+
+

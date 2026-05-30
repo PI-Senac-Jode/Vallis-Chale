@@ -1,0 +1,72 @@
+:root {
+  --primary: #2D3E33;
+  --primary-container: #4a6350;
+  --on-primary: #fcf9f8;
+
+  --secondary: #D5932E;
+  --secondary-container: #d9b67a;
+  --on-secondary: #fcf9f8;
+
+  --accent: #f4c65a;
+  --accent-hover: #e8b73e;
+
+  --surface: #fcf9f8;
+  --surface-dim: #f5ebe6;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8f1ed;
+  --surface-container: #f2e7e0;
+  --surface-container-high: #ecdcd1;
+  --surface-container-highest: #e3cfc2;
+
+  --light-start: #ffffff; 
+  --light-end: #e0e0e0;    
+  --light-text: #333333;
+
+  --surface-variant: #e0d8d2;
+  --on-surface: #1b1c1c;
+  --on-surface-variant: #55564f;
+  --on-surface-muted: #7a7b74;
+
+  --outline: #85857e;
+  --outline-variant: #c5c4be;
+
+  --shadow-ambient: 0px 20px 40px rgba(27, 28, 28, 0.06);
+  --shadow-soft: 0px 12px 32px rgba(27, 28, 28, 0.05);
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-pill: 999px;
+
+--font-heading: "Libre Baskerville", Georgia, "Times New Roman", serif;
+
+--font-body: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --display-lg: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --display-md: clamp(2rem, 3.5vw + 1rem, 3.25rem);
+  --display-sm: clamp(1.75rem, 2vw + 1rem, 2.25rem);
+  --title-lg: 1.5rem;
+  --title-md: 1.25rem;
+  --body-lg: 1.125rem;
+  --body-md: 1rem;
+  --body-sm: 0.875rem;
+  --label-md: 0.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3rem;
+  --space-9: 4rem;
+  --space-10: 6rem;
+  --space-11: 8rem;
+
+  --container-max: 1200px;
+  --container-gutter: clamp(2rem, 4vw, 3rem);
+}
