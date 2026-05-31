@@ -1,10 +1,52 @@
-<?php require_once '../config.php'; ?>
+<?php
+require_once '../config.php';
+require_once '../frontEnd/includes/chale-images.inc.php';
+
+$chaleId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$chale = null;
+
+try {
+    if ($chaleId) {
+        $stmt = $pdo->prepare(
+            'SELECT
+                ch.*,
+                cat.nome AS categoria_nome
+             FROM chale ch
+             LEFT JOIN categorias_chale cat ON ch.categoria_id = cat.id
+             WHERE ch.id = :id'
+        );
+        $stmt->execute([':id' => $chaleId]);
+        $chale = $stmt->fetch();
+    }
+
+    if (!$chale) {
+        $chale = $pdo->query(
+            'SELECT
+                ch.*,
+                cat.nome AS categoria_nome
+             FROM chale ch
+             LEFT JOIN categorias_chale cat ON ch.categoria_id = cat.id
+             WHERE ch.disponibilidade = 1
+             ORDER BY ch.id ASC
+             LIMIT 1'
+        )->fetch();
+    }
+} catch (PDOException $e) {
+    $chale = null;
+}
+
+$chaleName = $chale['nome'] ?? 'Chale indisponivel';
+$chaleDescription = $chale['descricao'] ?? 'Este chale ainda nao esta disponivel para exibicao.';
+$chaleImage = $chale ? get_chale_image($chale, '../') : '../src/assets/img/placeholder.png';
+$chalePrice = $chale ? number_format((float) ($chale['preco_diaria'] ?? 0), 2, ',', '.') : null;
+$chaleCategory = $chale['categoria_nome'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vallis Chalé — Refúgio de luxo na montanha</title>
+  <title><?= htmlspecialchars($chaleName, ENT_QUOTES, 'UTF-8') ?> | Vallis Chalé</title>
   <meta name="description" content="Vallis Chalé — chalés exclusivos que unem conforto moderno e natureza preservada." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,11 +69,21 @@
     <div class="hospedagens__content">
       <div class="hospedagens__header">
         <img src="../src/assets/img/bi_house.png" class="hospedagens__icon-title" alt="">
-        <h2 class="hospedagens__title">Chalé Paraíso</h2>
+        <h2 class="hospedagens__title"><?= htmlspecialchars($chaleName, ENT_QUOTES, 'UTF-8') ?></h2>
       </div>
       <p class="hospedagens__text">
-        Perfeito para casais que querem tranquilidade e contato com a natureza.
+        <?= htmlspecialchars($chaleDescription, ENT_QUOTES, 'UTF-8') ?>
       </p>
+      <?php if ($chalePrice || $chaleCategory): ?>
+        <p class="hospedagens__text">
+          <?php if ($chaleCategory): ?>
+            Categoria: <?= htmlspecialchars($chaleCategory, ENT_QUOTES, 'UTF-8') ?>.
+          <?php endif; ?>
+          <?php if ($chalePrice): ?>
+            Diaria: R$ <?= $chalePrice ?>.
+          <?php endif; ?>
+        </p>
+      <?php endif; ?>
       <div class="hospedagens__amenities">
         <div class="amenity-item">
           <img src="../src//assets/img/bx_area.png" alt=""> <span>Área reservada</span>
@@ -49,13 +101,13 @@
           <img src="../src/assets/img/proicons_wi-fi.png" alt=""> <span>Wi-fi</span>
         </div>
       </div>
-     <a href="<?= BASE_URL ?>/pages/reservar.php">
+     <a href="<?= BASE_URL ?>/pages/reservar.php<?= $chale ? '?id_chale=' . (int) $chale['id'] : '' ?>">
        <button class="btn btn-reserve-now">RESERVE AGORA</button>
      </a>
     </div>
 
     <div class="hospedagens__visual">
-      <img src="../src/assets/img/chale-paraiso.png" alt="Vista externa do Chalé Paraíso" class="hospedagens__main-image">
+      <img src="<?= htmlspecialchars($chaleImage, ENT_QUOTES, 'UTF-8') ?>" alt="Vista externa do <?= htmlspecialchars($chaleName, ENT_QUOTES, 'UTF-8') ?>" class="hospedagens__main-image">
     </div>
   </div>
 

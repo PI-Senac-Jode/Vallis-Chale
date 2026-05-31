@@ -1,4 +1,23 @@
- <?php require_once 'config.php'; ?>
+ <?php
+require_once 'config.php';
+require_once './frontEnd/includes/chale-images.inc.php';
+
+$homeChales = [];
+
+try {
+    $homeChales = $pdo->query(
+        'SELECT
+            ch.*,
+            cat.nome AS categoria_nome
+         FROM chale ch
+         LEFT JOIN categorias_chale cat ON ch.categoria_id = cat.id
+         WHERE ch.disponibilidade = 1
+         ORDER BY ch.id ASC'
+    )->fetchAll();
+} catch (PDOException $e) {
+    $homeChales = [];
+}
+?>
 <!DOCTYPE html>
 
 <html lang="pt-BR">
@@ -132,43 +151,60 @@
       <h2 class="section-title">HOSPEDAGENS</h2>
       <p class="section-subtitle">Chalés exclusivos que unem conforto moderno e total privacidade em meio à natureza preservada</p>
 
-      <div class="hospedagens__grid">
-        <article class="chale-card">
-          <img class="chale-card__image" src="./src/assets/img/chale-maravilha.png" alt="Chalé Paraíso" />
-          <div class="chale-card__body">
-            <h3 class="chale-card__title">Chalé Paraíso</h3>
-            <div class="chale-card__meta">
-              
-            </div>
-            <p class="chale-card__text">Recarregue suas energias sob o luar. Um refúgio místico com teto de vidro para dormir observando as constelações.</p>
-            <a href="./pages/chale.php" class="btn btn-accent">Saiba mais</a>
-          </div>
-        </article>
+      <div class="hospedagens__carousel" data-carousel>
+        <button class="hospedagens__control hospedagens__control--prev" type="button" data-carousel-prev aria-label="Hospedagem anterior">
+          <span aria-hidden="true">‹</span>
+        </button>
 
-        <article class="chale-card">
-          <img class="chale-card__image" src="./src/assets/img/chale-paraiso.png" alt="Chalé Paraíso" />
-          <div class="chale-card__body">
-            <h3 class="chale-card__title">Chalé Maravilha</h3>
-            <div class="chale-card__meta">
-              
-            </div>
-            <p class="chale-card__text">Desconecte do mundo e reconecte-se no Chalé Paraíso. O conforto que você merece, em meio à natureza.</p>
-            <a href="#" class="btn btn-accent">Saiba mais</a>
-          </div>
-        </article>
+        <div class="hospedagens__track" data-carousel-track>
+          <?php foreach ($homeChales as $chale): ?>
+            <?php
+              $chaleName = $chale['nome'] ?? 'Chale';
+              $chaleImage = get_chale_image($chale, './');
+              $chalePrice = number_format((float) ($chale['preco_diaria'] ?? 0), 2, ',', '.');
+              $chaleCategory = $chale['categoria_nome'] ?? '';
+            ?>
+            <article class="chale-card">
+              <img
+                class="chale-card__image"
+                src="<?= htmlspecialchars($chaleImage, ENT_QUOTES, 'UTF-8') ?>"
+                alt="<?= htmlspecialchars($chaleName, ENT_QUOTES, 'UTF-8') ?>"
+              />
+              <div class="chale-card__body">
+                <h3 class="chale-card__title"><?= htmlspecialchars($chaleName, ENT_QUOTES, 'UTF-8') ?></h3>
+                <div class="chale-card__meta">
+                  <?php if ($chaleCategory): ?>
+                    <span><?= htmlspecialchars($chaleCategory, ENT_QUOTES, 'UTF-8') ?></span>
+                  <?php endif; ?>
+                  <span>R$ <?= $chalePrice ?>/noite</span>
+                </div>
+                <p class="chale-card__text"><?= htmlspecialchars(get_chale_excerpt($chale['descricao'] ?? null), ENT_QUOTES, 'UTF-8') ?></p>
+                <a href="./pages/chale.php?id=<?= (int) $chale['id'] ?>" class="btn btn-accent">Saiba mais</a>
+              </div>
+            </article>
+          <?php endforeach; ?>
 
-        <article class="chale-card">
-          <img class="chale-card__image" src="./src/assets/img/chale-sossego.png" alt="Chalé Paraíso" />
-          <div class="chale-card__body">
-            <h3 class="chale-card__title">Chalé Sossego</h3>
-            <div class="chale-card__meta">
-              
-            </div>
-            <p class="chale-card__text">Intimista e acolhedor. Um espaço pensado para o descanso, com banheira de hidromassagem integrada.</p>
-            <a href="#" class="btn btn-accent">Saiba mais</a>
-          </div>
-        </article>
+          <?php if (!$homeChales): ?>
+            <article class="chale-card">
+              <img class="chale-card__image" src="./src/assets/img/placeholder.png" alt="Nenhum chale cadastrado" />
+              <div class="chale-card__body">
+                <h3 class="chale-card__title">Nenhum chale cadastrado</h3>
+                <div class="chale-card__meta">
+                  <span>Banco de dados</span>
+                </div>
+                <p class="chale-card__text">Cadastre chales no painel administrativo para exibir as hospedagens aqui.</p>
+                <a href="./pages/criar-chale.php" class="btn btn-accent">Cadastrar</a>
+              </div>
+            </article>
+          <?php endif; ?>
+        </div>
+
+        <button class="hospedagens__control hospedagens__control--next" type="button" data-carousel-next aria-label="Próxima hospedagem">
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
+
+      <div class="hospedagens__dots" data-carousel-dots aria-label="Selecionar hospedagem"></div>
 
     </div>
   </section>

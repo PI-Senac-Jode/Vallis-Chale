@@ -20,7 +20,6 @@ INSERT INTO categorias_chale (nome, descricao) VALUES
 ('Minimalista', 'Design minimalista'),
 ('VIP', 'Serviços exclusivos');
 
- 
 INSERT INTO cliente (cpf, nome, email) VALUES
 ('111.111.111-11', 'Ana Souza', 'ana@email.com'),
 ('222.222.222-22', 'Carlos Lima', 'carlos@email.com'),

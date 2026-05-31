@@ -214,7 +214,7 @@ function salvarReserva() {
 
   // objeto da reserva para armazenamento local
   const payload = {
-    chale: 'Chalé Paraíso',
+    chale: document.body.dataset.chaleName || 'Chale',
     checkin: checkin.toISOString(),
     checkout: checkout.toISOString(),
     noites,
