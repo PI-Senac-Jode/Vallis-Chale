@@ -12,7 +12,30 @@
           <li><a href="#hospedagens">Chalés</a></li>
         </ul>
       </nav>
-      <a href="<?= BASE_URL ?>/pages/login.php" class="nav__account" aria-label="Minha conta"><img src=" <?= BASE_URL ?>/src/assets/img/login.svg" alt=""></a>
+      <?php if (!empty($_SESSION['admin_logado'])): ?>
+        <details class="nav__account-dropdown">
+          <summary class="nav__account" aria-label="Abrir menu administrativo">
+            <img src="<?= BASE_URL ?>/src/assets/img/login.svg" alt="">
+          </summary>
+          <div class="nav__account-menu">
+            <span class="nav__account-title">Admin</span>
+            <a href="<?= BASE_URL ?>/pages/criar-chale.php">
+              <span class="nav__account-icon" aria-hidden="true">C</span>
+              Chalés
+            </a>
+            <a href="<?= BASE_URL ?>/pages/gerenciamento.php">
+              <span class="nav__account-icon" aria-hidden="true">R</span>
+              Reservas
+            </a>
+            <a href="<?= BASE_URL ?>/pages/logout.php">
+              <span class="nav__account-icon" aria-hidden="true">L</span>
+              Logout
+            </a>
+          </div>
+        </details>
+      <?php else: ?>
+        <a href="<?= BASE_URL ?>/pages/login.php" class="nav__account" aria-label="Minha conta"><img src="<?= BASE_URL ?>/src/assets/img/login.svg" alt=""></a>
+      <?php endif; ?>
     </div>
   </header>
 

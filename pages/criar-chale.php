@@ -201,6 +201,7 @@ if (!$feedback && $databaseWarning) {
     <main class="chale-admin-main container">
       <header class="chale-admin-header">
         <div>
+          <span class="management-eyebrow">Painel administrativo</span>
           <h1>Gerenciamento de Chales</h1>
           <p>Visualize, edite e gerencie todos os chales.</p>
         </div>

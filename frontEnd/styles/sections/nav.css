@@ -64,6 +64,98 @@
   color: var(--on-surface-variant);
 }
 
+.nav__account-dropdown {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.nav__account-dropdown summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.nav__account-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav__account-menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 100;
+  width: 210px;
+  padding: var(--space-2);
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-ambient);
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav__account-dropdown[open] .nav__account-menu {
+  display: flex;
+}
+
+.nav__account-menu::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  background: var(--surface-container-lowest);
+  border-left: 1px solid var(--outline-variant);
+  border-top: 1px solid var(--outline-variant);
+  transform: rotate(45deg);
+}
+
+.nav__account-title {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--label-md);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.nav__account-menu a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--body-sm);
+  line-height: 1.2;
+  color: var(--on-surface-variant);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.nav__account-icon {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 22px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-container);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.nav__account-menu a:hover,
+.nav__account-menu a:focus-visible {
+  background: var(--surface-container-low);
+  color: var(--primary);
+  outline: none;
+}
+
 @media (max-width: 720px) {
   .nav__links { display: none; }
 }
