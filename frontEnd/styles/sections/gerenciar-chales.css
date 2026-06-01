@@ -240,10 +240,10 @@ td {
   justify-content: center;
   width: 34px;
   height: 34px;
-  color: #56615f;
-  border: 1px solid transparent;
+  color: var(--primary);
+  border: 1px solid var(--outline-variant);
   border-radius: var(--radius-sm);
-  background: transparent;
+  background: var(--surface-bright);
   cursor: pointer;
 }
 

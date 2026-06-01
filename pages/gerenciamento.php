@@ -64,16 +64,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->beginTransaction();
 
-            $stmtCliente = $pdo->prepare(
-                'INSERT INTO cliente (cpf, nome, email)
-                 VALUES (:cpf, :nome, :email)
-                 ON DUPLICATE KEY UPDATE nome = :nome, email = :email'
+            $stmtClienteExistente = $pdo->prepare(
+                'SELECT cpf
+                 FROM cliente
+                 WHERE email = :email OR cpf = :cpf
+                 LIMIT 1'
             );
-            $stmtCliente->execute([
-                ':cpf' => $cpf,
-                ':nome' => $nome,
+            $stmtClienteExistente->execute([
                 ':email' => $email,
+                ':cpf' => $cpf,
             ]);
+            $clienteExistente = $stmtClienteExistente->fetch();
+
+            if ($clienteExistente) {
+                $cpfCliente = $clienteExistente['cpf'];
+
+                if (normalize_cpf($cpfCliente) !== $cpf) {
+                    $pdo->rollBack();
+                    redirect_with_feedback('Este e-mail ja esta cadastrado com outro CPF.', 'danger');
+                }
+
+                $stmtCliente = $pdo->prepare(
+                    'UPDATE cliente
+                     SET nome = :nome, email = :email
+                     WHERE cpf = :cpf'
+                );
+                $stmtCliente->execute([
+                    ':cpf' => $cpfCliente,
+                    ':nome' => $nome,
+                    ':email' => $email,
+                ]);
+            } else {
+                $cpfCliente = $cpf;
+
+                $stmtCliente = $pdo->prepare(
+                    'INSERT INTO cliente (cpf, nome, email)
+                     VALUES (:cpf, :nome, :email)'
+                );
+                $stmtCliente->execute([
+                    ':cpf' => $cpfCliente,
+                    ':nome' => $nome,
+                    ':email' => $email,
+                ]);
+            }
 
             $stmtReserva = $pdo->prepare(
                 'INSERT INTO reserva (id_chale, id_cliente, data_inicio, data_fim, status)
@@ -81,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $stmtReserva->execute([
                 ':id_chale' => $idChale,
-                ':id_cliente' => $cpf,
+                ':id_cliente' => $cpfCliente,
                 ':data_inicio' => $dataInicio,
                 ':data_fim' => $dataFim,
                 ':status' => $status,
