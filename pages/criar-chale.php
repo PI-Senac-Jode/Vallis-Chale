@@ -1,6 +1,7 @@
 <?php
 require_once '../config.php';
 
+// Esta area pertence ao painel administrativo e exige login.
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     header('Location: login.php');
     exit;
@@ -18,6 +19,8 @@ function redirect_chale_feedback(string $message, string $type = 'success'): voi
 
 function parse_money_value(string $value): float
 {
+    // Aceita valores digitados no formato brasileiro, como "R$ 350,00",
+    // e converte para float antes de salvar no campo DECIMAL do MySQL.
     $value = trim($value);
     $value = str_replace(['R$', ' '], '', $value);
 
@@ -33,6 +36,8 @@ function parse_money_value(string $value): float
 
 function normalize_available_dates(string $dates): ?string
 {
+    // Recebe datas separadas por linha ou virgula e salva como JSON.
+    // O banco possui a coluna datas_disponiveis do tipo JSON.
     $items = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $dates)));
     $validDates = [];
 
@@ -67,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if ($action === 'create' || $action === 'update') {
+            // Fluxo compartilhado para cadastro e edicao de chales.
+            // Depois da validacao, o action define se sera INSERT ou UPDATE.
             $nome = trim($_POST['nome'] ?? '');
             $descricao = trim($_POST['descricao'] ?? '');
             $precoDiaria = parse_money_value($_POST['preco_diaria'] ?? '0');
@@ -79,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($action === 'create') {
+                // Insere um novo chale com categoria, diaria, status e datas disponiveis.
                 $stmt = $pdo->prepare(
                     'INSERT INTO chale (nome, descricao, preco_diaria, datas_disponiveis, disponibilidade, categoria_id)
                      VALUES (:nome, :descricao, :preco_diaria, :datas_disponiveis, :disponibilidade, :categoria_id)'
@@ -97,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
+            // Atualiza um chale existente identificado pelo ID enviado no formulario.
             if (!$id) {
                 redirect_chale_feedback('Chale nao encontrado para edicao.', 'danger');
             }
@@ -125,6 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($action === 'delete') {
+            // Tenta excluir o chale. Se houver reserva vinculada, a chave estrangeira
+            // impede a exclusao fisica; nesse caso o chale fica apenas inativo.
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
             if (!$id) {
@@ -151,6 +162,7 @@ $categorias = [];
 $databaseWarning = null;
 
 try {
+    // Carrega categorias para o select e chales para a tabela de gerenciamento.
     $categorias = $pdo->query('SELECT id, nome FROM categorias_chale ORDER BY nome')->fetchAll();
     $chales = $pdo->query(
         'SELECT

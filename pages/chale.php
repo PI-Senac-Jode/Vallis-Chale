@@ -2,11 +2,14 @@
 require_once '../config.php';
 require_once '../frontEnd/includes/chale-images.inc.php';
 
+// Pagina de detalhes de um chale.
+// O ID vem pela URL; se nao vier, a pagina mostra o primeiro chale ativo.
 $chaleId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $chale = null;
 
 try {
     if ($chaleId) {
+        // Busca o chale solicitado junto com o nome da categoria.
         $stmt = $pdo->prepare(
             'SELECT
                 ch.*,
@@ -20,6 +23,7 @@ try {
     }
 
     if (!$chale) {
+        // Fallback para manter a pagina funcionando mesmo sem ID valido.
         $chale = $pdo->query(
             'SELECT
                 ch.*,
@@ -32,9 +36,12 @@ try {
         )->fetch();
     }
 } catch (PDOException $e) {
+    // Se houver erro no banco, os textos padrao abaixo evitam quebra visual da pagina.
     $chale = null;
 }
 
+// Variaveis preparadas para a camada HTML.
+// Todo texto vindo do banco e exibido com htmlspecialchars no template.
 $chaleName = $chale['nome'] ?? 'Chale indisponivel';
 $chaleDescription = $chale['descricao'] ?? 'Este chale ainda nao esta disponivel para exibicao.';
 $chaleImage = $chale ? get_chale_image($chale, '../') : '../src/assets/img/placeholder.png';

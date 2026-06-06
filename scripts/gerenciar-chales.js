@@ -1,12 +1,15 @@
 function openModal(id) {
+  // Exibe o modal informado adicionando a classe usada pelo CSS.
   document.getElementById(id).classList.add('active');
 }
 
 function closeModal(id) {
+  // Fecha o modal removendo a classe ativa.
   document.getElementById(id).classList.remove('active');
 }
 
 function formatMoneyForInput(value) {
+  // Formata o valor vindo do banco para o padrao visual brasileiro.
   const numberValue = Number(value || 0);
 
   return numberValue.toLocaleString('pt-BR', {
@@ -16,6 +19,7 @@ function formatMoneyForInput(value) {
 }
 
 function datesToTextareaValue(value) {
+  // Converte o JSON de datas salvo no banco em uma lista editavel no textarea.
   if (!value) {
     return '';
   }
@@ -29,6 +33,7 @@ function datesToTextareaValue(value) {
 }
 
 function openCreateModal() {
+  // Limpa o formulario para cadastrar um novo chale.
   document.getElementById('modalChaleTitle').textContent = 'Novo Chale';
   document.getElementById('form-action').value = 'create';
   document.getElementById('chale-id').value = '';
@@ -42,6 +47,7 @@ function openCreateModal() {
 }
 
 function openEditModal(chale) {
+  // Preenche o formulario com os dados do chale selecionado na tabela.
   document.getElementById('modalChaleTitle').textContent = 'Editar Chale';
   document.getElementById('form-action').value = 'update';
   document.getElementById('chale-id').value = chale.id;
@@ -55,12 +61,14 @@ function openEditModal(chale) {
 }
 
 function openDeleteModal(id, nome) {
+  // Guarda o ID do chale no formulario de exclusao e mostra o nome na confirmacao.
   document.getElementById('delete-chale-id').value = id;
   document.getElementById('deleteChaleName').textContent = nome;
   openModal('modalExcluirChale');
 }
 
 function showToast(message, type = 'success') {
+  // Mostra mensagens vindas do PHP apos criar, editar ou excluir um registro.
   const container = document.getElementById('toastContainer');
 
   if (!message) {
@@ -87,6 +95,7 @@ const counter = document.getElementById('chaleCounter');
 
 if (searchInput && counter) {
   searchInput.addEventListener('input', () => {
+    // Filtro local: usa o texto preparado no atributo data-search de cada linha.
     const term = searchInput.value.trim().toLowerCase();
     let visibleRows = 0;
 

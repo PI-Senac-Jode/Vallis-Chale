@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Troca a imagem principal da galeria pela miniatura clicada.
   const mainImage = document.getElementById('mainImage');
 
   if (mainImage) {
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.querySelectorAll('[data-carousel]').forEach(carousel => {
+    // Carrossel das hospedagens exibidas na pagina inicial.
     const track = carousel.querySelector('[data-carousel-track]');
     const prevButton = carousel.querySelector('[data-carousel-prev]');
     const nextButton = carousel.querySelector('[data-carousel-next]');
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const getStep = () => {
+      // Cada movimento do carrossel considera largura do card + espacamento do CSS.
       const firstCard = cards[0];
       const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
 
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getActiveIndex = () => Math.min(Math.round(track.scrollLeft / getStep()), getMaxIndex());
 
     const renderDots = () => {
+      // Cria os indicadores conforme a quantidade de grupos rolaveis.
       if (!dotsContainer) {
         return;
       }
@@ -75,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateCarousel = () => {
+      // Atualiza botoes e indicador ativo conforme a posicao atual do scroll.
       renderDots();
 
       const activeIndex = getActiveIndex();

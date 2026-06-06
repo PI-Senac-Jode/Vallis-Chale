@@ -2,6 +2,7 @@
 
 function normalize_chale_key(string $value): string
 {
+    // Remove acentos quando possivel para facilitar comparacoes por palavra-chave.
     $normalized = function_exists('iconv') ? iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value) : false;
     $normalized = $normalized !== false ? $normalized : $value;
 
@@ -10,6 +11,7 @@ function normalize_chale_key(string $value): string
 
 function chale_image_options(): array
 {
+    // Banco de imagens locais usado quando o chale nao possui imagem cadastrada.
     return [
         'chale-maravilha.png',
         'chale-paraiso.png',
@@ -22,6 +24,7 @@ function chale_image_options(): array
 
 function get_chale_image(array $chale, string $assetPrefix = './'): string
 {
+    // Se o banco tiver imagem_url, ela tem prioridade sobre as escolhas automaticas.
     if (!empty($chale['imagem_url'])) {
         $imageUrl = trim($chale['imagem_url']);
 
@@ -37,6 +40,7 @@ function get_chale_image(array $chale, string $assetPrefix = './'): string
     $category = normalize_chale_key($chale['categoria_nome'] ?? '');
     $text = $name . ' ' . $description . ' ' . $category;
 
+    // Associa imagens locais a palavras encontradas no nome, descricao ou categoria.
     $keywordImages = [
         'piscina' => 'chale-com-piscina.png',
         'lago' => 'chale-com-piscina.png',
@@ -63,11 +67,13 @@ function get_chale_image(array $chale, string $assetPrefix = './'): string
     $images = chale_image_options();
     $index = max((int) ($chale['id'] ?? 1) - 1, 0) % count($images);
 
+    // Ultimo fallback: distribui as imagens pela ordem do ID do chale.
     return $assetPrefix . 'src/assets/img/' . $images[$index];
 }
 
 function get_chale_excerpt(?string $description, int $limit = 135): string
 {
+    // Cria um resumo curto para os cards da pagina inicial.
     $description = trim((string) $description);
 
     if ($description === '') {
