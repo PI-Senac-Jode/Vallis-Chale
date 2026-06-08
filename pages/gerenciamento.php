@@ -68,17 +68,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $pdo->beginTransaction();
 
-            // O cliente usa CPF como chave primaria. Se ja existir, atualiza nome/e-mail.
-            $stmtCliente = $pdo->prepare(
-                'INSERT INTO cliente (cpf, nome, email)
-                 VALUES (:cpf, :nome, :email)
-                 ON DUPLICATE KEY UPDATE nome = :nome, email = :email'
+            $stmtClienteExistente = $pdo->prepare(
+                'SELECT cpf
+                 FROM cliente
+                 WHERE email = :email OR cpf = :cpf
+                 LIMIT 1'
             );
-            $stmtCliente->execute([
-                ':cpf' => $cpf,
-                ':nome' => $nome,
+            $stmtClienteExistente->execute([
                 ':email' => $email,
+                ':cpf' => $cpf,
             ]);
+            $clienteExistente = $stmtClienteExistente->fetch();
+
+            if ($clienteExistente) {
+                $cpfCliente = $clienteExistente['cpf'];
+
+                if (normalize_cpf($cpfCliente) !== $cpf) {
+                    $pdo->rollBack();
+                    redirect_with_feedback('Este e-mail ja esta cadastrado com outro CPF.', 'danger');
+                }
+
+                $stmtCliente = $pdo->prepare(
+                    'UPDATE cliente
+                     SET nome = :nome, email = :email
+                     WHERE cpf = :cpf'
+                );
+                $stmtCliente->execute([
+                    ':cpf' => $cpfCliente,
+                    ':nome' => $nome,
+                    ':email' => $email,
+                ]);
+            } else {
+                $cpfCliente = $cpf;
+
+                $stmtCliente = $pdo->prepare(
+                    'INSERT INTO cliente (cpf, nome, email)
+                     VALUES (:cpf, :nome, :email)'
+                );
+                $stmtCliente->execute([
+                    ':cpf' => $cpfCliente,
+                    ':nome' => $nome,
+                    ':email' => $email,
+                ]);
+            }
 
             // A reserva referencia a tabela cliente pelo CPF e a tabela chale pelo ID.
             $stmtReserva = $pdo->prepare(
@@ -87,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
             $stmtReserva->execute([
                 ':id_chale' => $idChale,
-                ':id_cliente' => $cpf,
+                ':id_cliente' => $cpfCliente,
                 ':data_inicio' => $dataInicio,
                 ':data_fim' => $dataFim,
                 ':status' => $status,
@@ -251,7 +283,7 @@ $statusOptions = ['Confirmada', 'Pendente', 'Cancelada', 'Excluida'];
                 <?php
                   $noites = max((int) $reserva['noites'], 0);
                   $valorTotal = $noites * (float) $reserva['preco_diaria'];
-                  $statusClass = strtolower(str_replace([' ', 'í'], ['', 'i'], $reserva['status'] ?? 'pendente'));
+                  $statusClass = strtolower(str_replace(' ', '', $reserva['status'] ?? 'pendente'));
                 ?>
                 <tr data-search="<?= htmlspecialchars(strtolower($reserva['cliente_nome'] . ' ' . $reserva['cliente_email'] . ' ' . $reserva['id_cliente'] . ' ' . $reserva['chale_nome'] . ' ' . $reserva['status']), ENT_QUOTES, 'UTF-8') ?>">
                   <td>

@@ -33,9 +33,10 @@
 }
 
 .management-header p {
-  max-width: 62ch;
   margin-top: var(--space-2);
   margin-bottom: 0;
+  color: var(--on-surface-muted);
+  font-size: var(--body-sm);
 }
 
 .management-link,

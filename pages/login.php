@@ -59,18 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label>Senha:</label>
                         <input type="password" name="senha" required>
                     </div>
-
-                    <div class="options-container">
-                        <div class="option-item">
-                            <p>Lembrar-me</p>
-                            <div class="circle-select"></div>
-                        </div>
-                        <div class="option-item">
-                            <p>Esqueci a senha</p>
-                            <div class="circle-select"></div>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-reserve-now">Login</button>
                 </form>
             </div>

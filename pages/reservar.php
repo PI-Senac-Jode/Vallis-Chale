@@ -129,6 +129,53 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
           <p id="mensagemReserva" class="booking-panel__message" aria-live="polite"></p>
         </aside>
       </section>
+
+      <div id="modalReserva" class="booking-modal" aria-hidden="true">
+        <div class="booking-modal__overlay" data-fechar-modal></div>
+        <section class="booking-modal__card" role="dialog" aria-modal="true" aria-labelledby="modalReservaTitulo">
+          <button class="booking-modal__close" type="button" data-fechar-modal aria-label="Fechar modal">
+            &times;
+          </button>
+
+          <span class="booking-modal__eyebrow">dados do cliente</span>
+          <h2 id="modalReservaTitulo" class="booking-modal__title">Confirmar reserva</h2>
+          <p class="booking-modal__subtitle">Preencha seus dados para concluir a solicita&ccedil;&atilde;o.</p>
+
+          <form action="<?= BASE_URL ?>/pages/processar-reserva.php" method="POST" class="booking-modal__form">
+            <input type="hidden" name="id_chale" value="1">
+            <input type="hidden" id="data_inicio" name="data_inicio" required>
+            <input type="hidden" id="data_fim" name="data_fim" required>
+
+            <label class="booking-modal__field" for="nome">
+              <span>Nome completo</span>
+              <input type="text" id="nome" name="nome" autocomplete="name" required>
+            </label>
+
+            <label class="booking-modal__field" for="email">
+              <span>E-mail</span>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+            </label>
+
+            <label class="booking-modal__field" for="cpf">
+              <span>CPF</span>
+              <input type="text" id="cpf" name="cpf" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14" required>
+            </label>
+
+            <div class="booking-modal__dates">
+              <div>
+                <span>Check-in</span>
+                <strong id="modalCheckin">--</strong>
+              </div>
+              <div>
+                <span>Check-out</span>
+                <strong id="modalCheckout">--</strong>
+              </div>
+            </div>
+
+            <button class="booking-modal__submit" type="submit">Confirmar reserva</button>
+          </form>
+        </section>
+      </div>
     </main>
 
 <?php include "../frontEnd/includes/footer.inc.php"; ?>

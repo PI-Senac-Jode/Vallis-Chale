@@ -17,6 +17,11 @@ const btnLimpar = document.getElementById('limparDatas'); // botao que limpa o i
 const btnPrev = document.getElementById('prev'); // navegacao para o mes anterior
 const btnNext = document.getElementById('next'); // navegacao para o proximo mes
 
+const modalReserva = document.getElementById('modalReserva');
+const modalCheckinEl = document.getElementById('modalCheckin');
+const modalCheckoutEl = document.getElementById('modalCheckout');
+const cpfEl = document.getElementById('cpf');
+
 // ====== LISTA DE MESES ======
 const meses = [
   'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
@@ -53,6 +58,16 @@ function formatarData(data) {
   return localeFormat.format(data);
 }
 
+function formatarDataInput(data) {
+  if (!data) return '';
+
+  const ano = data.getFullYear();
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, '0');
+
+  return `${ano}-${mes}-${dia}`;
+}
+
 function formatarMoeda(valor) {
   // Exibe valores em reais.
   return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -66,7 +81,7 @@ function diferencaEmNoites(inicio, fim) {
 
 function obterPrecoNoite() {
   // Lendo do input, o PHP consegue preencher o preco vindo do banco de dados.
-  const valor = Number(precoNoiteEl.value);
+  const valor = Number(precoNoiteEl?.value);
   return Number.isFinite(valor) && valor > 0 ? valor : 0;
 }
 
@@ -79,7 +94,7 @@ function atualizarResumo() {
   // tambem preenche os inputs enviados para processar-reserva.php.
   if (checkin) {
     checkinEl.textContent = formatarData(checkin);
-    if (inputInicio) inputInicio.value = checkin.toISOString().split('T')[0];
+    if (inputInicio) inputInicio.value = formatarDataInput(checkin);
   } else {
     checkinEl.textContent = '-';
     if (inputInicio) inputInicio.value = '';
@@ -87,7 +102,7 @@ function atualizarResumo() {
 
   if (checkout) {
     checkoutEl.textContent = formatarData(checkout);
-    if (inputFim) inputFim.value = checkout.toISOString().split('T')[0];
+    if (inputFim) inputFim.value = formatarDataInput(checkout);
   } else {
     checkoutEl.textContent = '-';
     if (inputFim) inputFim.value = '';
@@ -97,8 +112,7 @@ function atualizarResumo() {
 
   if (noites > 0) {
     noitesEl.textContent = noites;
-    const preco = obterPrecoNoite();
-    resumoTotalEl.textContent = `Total estimado: ${formatarMoeda(noites * preco)}`;
+    resumoTotalEl.textContent = `Total estimado: ${formatarMoeda(noites * obterPrecoNoite())}`;
   } else {
     noitesEl.textContent = '--';
     resumoTotalEl.textContent = 'Selecione check-in e check-out para calcular o total';
@@ -191,20 +205,61 @@ function limparSelecao() {
   renderCalendar();
 }
 
-// ====== PRE-RESERVA ======
-function salvarReserva() {
+function abrirModalReserva() {
+  if (!modalReserva) return;
+
+  const inputInicio = document.getElementById('data_inicio');
+  const inputFim = document.getElementById('data_fim');
+
+  if (inputInicio) inputInicio.value = formatarDataInput(checkin);
+  if (inputFim) inputFim.value = formatarDataInput(checkout);
+  if (modalCheckinEl) modalCheckinEl.textContent = formatarData(checkin);
+  if (modalCheckoutEl) modalCheckoutEl.textContent = formatarData(checkout);
+
+  modalReserva.classList.add('is-open');
+  modalReserva.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('nome')?.focus();
+}
+
+function fecharModalReserva() {
+  if (!modalReserva) return;
+
+  modalReserva.classList.remove('is-open');
+  modalReserva.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function aplicarMascaraCpf(event) {
+  const numeros = event.target.value.replace(/\D/g, '').slice(0, 11);
+  const partes = [];
+
+  if (numeros.length > 0) partes.push(numeros.slice(0, 3));
+  if (numeros.length > 3) partes.push(numeros.slice(3, 6));
+  if (numeros.length > 6) partes.push(numeros.slice(6, 9));
+
+  let valor = partes.join('.');
+
+  if (numeros.length > 9) {
+    valor += `-${numeros.slice(9, 11)}`;
+  }
+
+  event.target.value = valor;
+}
+
+function confirmarReserva() {
   const noites = diferencaEmNoites(checkin, checkout);
 
   if (noites <= 0) {
-    mensagemReservaEl.textContent = 'Selecione um periodo valido para continuar.';
+    mensagemReservaEl.textContent = 'Selecione um per\u00edodo v\u00e1lido para continuar.';
     return;
   }
 
-  // A pre-reserva fica no navegador para ser reaproveitada na tela de confirmacao.
   const payload = {
-    chale: document.body.dataset.chaleName || 'Chale',
-    checkin: checkin.toISOString(),
-    checkout: checkout.toISOString(),
+    chale: 'Chal\u00e9 Para\u00edso',
+    checkin: formatarDataInput(checkin),
+    checkout: formatarDataInput(checkout),
     noites,
     precoNoite: obterPrecoNoite(),
     total: noites * obterPrecoNoite(),
@@ -212,24 +267,34 @@ function salvarReserva() {
   };
 
   localStorage.setItem('vallisChaleReserva', JSON.stringify(payload));
-  mensagemReservaEl.textContent = `Pre-reserva salva com sucesso: ${formatarData(checkin)} ate ${formatarData(checkout)}.`;
+  mensagemReservaEl.textContent = '';
+  abrirModalReserva();
 }
 
-// ====== NAVEGACAO DE MESES ======
-btnPrev.addEventListener('click', () => {
+btnPrev?.addEventListener('click', () => {
   viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
   renderCalendar();
 });
 
-btnNext.addEventListener('click', () => {
+btnNext?.addEventListener('click', () => {
   viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
   renderCalendar();
 });
 
-// ====== INICIALIZACAO ======
-if (precoNoiteEl) precoNoiteEl.addEventListener('input', atualizarResumo);
-if (btnConfirmar) btnConfirmar.addEventListener('click', salvarReserva);
-if (btnLimpar) btnLimpar.addEventListener('click', limparSelecao);
+precoNoiteEl?.addEventListener('input', atualizarResumo);
+btnConfirmar?.addEventListener('click', confirmarReserva);
+btnLimpar?.addEventListener('click', limparSelecao);
+cpfEl?.addEventListener('input', aplicarMascaraCpf);
+
+document.querySelectorAll('[data-fechar-modal]').forEach((elemento) => {
+  elemento.addEventListener('click', fecharModalReserva);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    fecharModalReserva();
+  }
+});
 
 atualizarResumo();
 renderCalendar();
