@@ -1,161 +1,156 @@
-// ====== ELEMENTOS DO DOM ======
-const diasEl = document.getElementById('dias'); // onde os dias do calendário são renderizados
-const mesAnoEl = document.getElementById('mesAno'); // título do mês/ano
+const diasEl = document.getElementById('dias');
+const mesAnoEl = document.getElementById('mesAno');
 
-const checkinEl = document.getElementById('checkin'); // exibe data de entrada
-const checkoutEl = document.getElementById('checkout'); // exibe data de saída
-const noitesEl = document.getElementById('noites'); // mostra quantidade de noites
+const checkinEl = document.getElementById('checkin');
+const checkoutEl = document.getElementById('checkout');
+const noitesEl = document.getElementById('noites');
 
-const precoNoiteEl = document.getElementById('precoNoite'); // input do preço por noite
-const resumoTotalEl = document.getElementById('resumoTotal'); // mostra valor total calculado
+const precoNoiteEl = document.getElementById('precoNoite');
+const resumoTotalEl = document.getElementById('resumoTotal');
+const mensagemReservaEl = document.getElementById('mensagemReserva');
 
-const mensagemReservaEl = document.getElementById('mensagemReserva'); // mensagens para o usuário
+const btnConfirmar = document.getElementById('confirmarReserva');
+const btnLimpar = document.getElementById('limparDatas');
+const btnPrev = document.getElementById('prev');
+const btnNext = document.getElementById('next');
 
-const btnConfirmar = document.getElementById('confirmarReserva'); // botão de salvar reserva
-const btnLimpar = document.getElementById('limparDatas'); // botão de limpar seleção
+const modalReserva = document.getElementById('modalReserva');
+const modalCheckinEl = document.getElementById('modalCheckin');
+const modalCheckoutEl = document.getElementById('modalCheckout');
+const cpfEl = document.getElementById('cpf');
 
-const btnPrev = document.getElementById('prev'); // mês anterior
-const btnNext = document.getElementById('next'); // próximo mês
-
-// ====== LISTA DE MESES (para exibir no calendário) ======
 const meses = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+  'Janeiro',
+  'Fevereiro',
+  'Mar\u00e7o',
+  'Abril',
+  'Maio',
+  'Junho',
+  'Julho',
+  'Agosto',
+  'Setembro',
+  'Outubro',
+  'Novembro',
+  'Dezembro',
 ];
 
-// formatação de data no padrão brasileiro
 const localeFormat = new Intl.DateTimeFormat('pt-BR', {
   day: 'numeric',
   month: 'short',
   year: 'numeric',
 });
 
-// ====== ESTADO DO CALENDÁRIO ======
-let viewDate = new Date(2026, 3, 1); // mês que está sendo exibido (Abril de 2026)
-let checkin = new Date(2026, 3, 15); // data inicial selecionada
-let checkout = new Date(2026, 3, 30); // data final selecionada
+let viewDate = new Date(2026, 3, 1);
+let checkin = new Date(2026, 3, 15);
+let checkout = new Date(2026, 3, 30);
 
-// ====== FUNÇÕES UTILITÁRIAS ======
-
-// normaliza a data (remove horas/minutos/segundos)
 function normalizarData(data) {
   return new Date(data.getFullYear(), data.getMonth(), data.getDate());
 }
 
-// compara se duas datas são exatamente iguais
 function dataIgual(a, b) {
   return a && b && a.getTime() === b.getTime();
 }
 
-// formata data para exibição visual
 function formatarData(data) {
   if (!data) return '--';
   return localeFormat.format(data);
 }
 
-// === CORREÇÃO: Adicionada a função que estava faltando no seu script ===
+function formatarDataInput(data) {
+  if (!data) return '';
+
+  const ano = data.getFullYear();
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, '0');
+
+  return `${ano}-${mes}-${dia}`;
+}
+
 function formatarMoeda(valor) {
   return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// calcula diferença em dias entre duas datas
 function diferencaEmNoites(inicio, fim) {
   if (!inicio || !fim) return 0;
   return Math.round((fim - inicio) / (1000 * 60 * 60 * 24));
 }
 
-// pega o preço por noite do input
 function obterPrecoNoite() {
-  const valor = Number(precoNoiteEl.value);
+  const valor = Number(precoNoiteEl?.value);
   return Number.isFinite(valor) && valor > 0 ? valor : 0;
 }
 
-// ====== ATUALIZA RESUMO DA RESERVA ======
 function atualizarResumo() {
-  // Captura os elementos do formulário PHP de forma segura
   const inputInicio = document.getElementById('data_inicio');
   const inputFim = document.getElementById('data_fim');
 
-  // Atualiza a entrada visual e o input do formulário PHP (se ele existir na página)
   if (checkin) {
     checkinEl.textContent = formatarData(checkin);
-    if (inputInicio) inputInicio.value = checkin.toISOString().split('T')[0];
+    if (inputInicio) inputInicio.value = formatarDataInput(checkin);
   } else {
     checkinEl.textContent = '-';
     if (inputInicio) inputInicio.value = '';
   }
 
-  // Atualiza a saída visual e o input do formulário PHP (se ele existir na página)
   if (checkout) {
     checkoutEl.textContent = formatarData(checkout);
-    if (inputFim) inputFim.value = checkout.toISOString().split('T')[0];
+    if (inputFim) inputFim.value = formatarDataInput(checkout);
   } else {
     checkoutEl.textContent = '-';
     if (inputFim) inputFim.value = '';
   }
 
-  // Cálculo de noites e preço total estimado
   const noites = diferencaEmNoites(checkin, checkout);
+
   if (noites > 0) {
     noitesEl.textContent = noites;
-    const preco = obterPrecoNoite();
-    resumoTotalEl.textContent = `Total estimado: ${formatarMoeda(noites * preco)}`;
+    resumoTotalEl.textContent = `Total estimado: ${formatarMoeda(noites * obterPrecoNoite())}`;
   } else {
     noitesEl.textContent = '--';
     resumoTotalEl.textContent = 'Selecione check-in e check-out para calcular o total';
   }
 
-  // Controla o estado do botão de confirmação (essência do script 1)
   if (btnConfirmar) {
     btnConfirmar.disabled = noites <= 0;
   }
 }
 
-// ====== RENDERIZA O CALENDÁRIO ======
 function renderCalendar() {
   if (!diasEl || !mesAnoEl) return;
-  diasEl.innerHTML = ''; // limpa calendário anterior
 
+  diasEl.innerHTML = '';
   mesAnoEl.textContent = `${meses[viewDate.getMonth()]} ${viewDate.getFullYear()}`;
 
   const ano = viewDate.getFullYear();
   const mes = viewDate.getMonth();
-
   const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
   const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
-
   const hoje = normalizarData(new Date());
 
-  // espaços vazios antes do 1º dia do mês
-  for (let i = 0; i < primeiroDiaSemana; i++) {
+  for (let i = 0; i < primeiroDiaSemana; i += 1) {
     const empty = document.createElement('div');
     empty.className = 'calendar-day--empty';
     diasEl.appendChild(empty);
   }
 
-  // cria os dias do mês
-  for (let dia = 1; dia <= ultimoDiaMes; dia++) {
+  for (let dia = 1; dia <= ultimoDiaMes; dia += 1) {
     const data = normalizarData(new Date(ano, mes, dia));
-
     const button = document.createElement('button');
+
     button.type = 'button';
     button.className = 'calendar-day';
     button.textContent = dia;
-
-    // acessibilidade (leitura por leitor de tela)
     button.setAttribute('aria-label', formatarData(data));
 
-    // marca dia atual
     if (dataIgual(data, hoje)) {
       button.classList.add('is-today');
     }
 
-    // marca intervalo entre check-in e check-out
     if (checkin && checkout && data > checkin && data < checkout) {
       button.classList.add('is-range');
     }
 
-    // marca início e fim da seleção
     if (dataIgual(data, checkin)) {
       button.classList.add('is-start');
     }
@@ -164,28 +159,20 @@ function renderCalendar() {
       button.classList.add('is-end');
     }
 
-    // clique no dia seleciona data
     button.addEventListener('click', () => selecionarData(data));
-
     diasEl.appendChild(button);
   }
 }
 
-// ====== SELEÇÃO DE DATAS ======
 function selecionarData(dataSelecionada) {
   mensagemReservaEl.textContent = '';
 
-  // primeira seleção ou reinício
   if (!checkin || (checkin && checkout)) {
     checkin = dataSelecionada;
     checkout = null;
-
-    // se clicou em data anterior, reinicia seleção
   } else if (dataSelecionada.getTime() <= checkin.getTime()) {
     checkin = dataSelecionada;
     checkout = null;
-
-    // define checkout
   } else {
     checkout = dataSelecionada;
   }
@@ -194,7 +181,6 @@ function selecionarData(dataSelecionada) {
   renderCalendar();
 }
 
-// ====== LIMPAR SELEÇÃO ======
 function limparSelecao() {
   checkin = null;
   checkout = null;
@@ -203,48 +189,96 @@ function limparSelecao() {
   renderCalendar();
 }
 
-// ====== SALVAR RESERVA ======
-function salvarReserva() {
+function abrirModalReserva() {
+  if (!modalReserva) return;
+
+  const inputInicio = document.getElementById('data_inicio');
+  const inputFim = document.getElementById('data_fim');
+
+  if (inputInicio) inputInicio.value = formatarDataInput(checkin);
+  if (inputFim) inputFim.value = formatarDataInput(checkout);
+  if (modalCheckinEl) modalCheckinEl.textContent = formatarData(checkin);
+  if (modalCheckoutEl) modalCheckoutEl.textContent = formatarData(checkout);
+
+  modalReserva.classList.add('is-open');
+  modalReserva.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('nome')?.focus();
+}
+
+function fecharModalReserva() {
+  if (!modalReserva) return;
+
+  modalReserva.classList.remove('is-open');
+  modalReserva.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function aplicarMascaraCpf(event) {
+  const numeros = event.target.value.replace(/\D/g, '').slice(0, 11);
+  const partes = [];
+
+  if (numeros.length > 0) partes.push(numeros.slice(0, 3));
+  if (numeros.length > 3) partes.push(numeros.slice(3, 6));
+  if (numeros.length > 6) partes.push(numeros.slice(6, 9));
+
+  let valor = partes.join('.');
+
+  if (numeros.length > 9) {
+    valor += `-${numeros.slice(9, 11)}`;
+  }
+
+  event.target.value = valor;
+}
+
+function confirmarReserva() {
   const noites = diferencaEmNoites(checkin, checkout);
 
   if (noites <= 0) {
-    mensagemReservaEl.textContent = 'Selecione um período válido para continuar.';
+    mensagemReservaEl.textContent = 'Selecione um per\u00edodo v\u00e1lido para continuar.';
     return;
   }
 
-  // objeto da reserva para armazenamento local
   const payload = {
-    chale: 'Chalé Paraíso',
-    checkin: checkin.toISOString(),
-    checkout: checkout.toISOString(),
+    chale: 'Chal\u00e9 Para\u00edso',
+    checkin: formatarDataInput(checkin),
+    checkout: formatarDataInput(checkout),
     noites,
     precoNoite: obterPrecoNoite(),
     total: noites * obterPrecoNoite(),
     criadoEm: new Date().toISOString(),
   };
 
-  // salva no navegador
   localStorage.setItem('vallisChaleReserva', JSON.stringify(payload));
-
-  mensagemReservaEl.textContent = `Pré-reserva salva com sucesso: ${formatarData(checkin)} até ${formatarData(checkout)}.`;
+  mensagemReservaEl.textContent = '';
+  abrirModalReserva();
 }
 
-// ====== NAVEGAÇÃO DE MESES ======
-btnPrev.addEventListener('click', () => {
+btnPrev?.addEventListener('click', () => {
   viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
   renderCalendar();
 });
 
-btnNext.addEventListener('click', () => {
+btnNext?.addEventListener('click', () => {
   viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
   renderCalendar();
 });
 
-// ====== EVENTOS GERAIS ======
-if (precoNoiteEl) precoNoiteEl.addEventListener('input', atualizarResumo);
-if (btnConfirmar) btnConfirmar.addEventListener('click', salvarReserva);
-if (btnLimpar) btnLimpar.addEventListener('click', limparSelecao);
+precoNoiteEl?.addEventListener('input', atualizarResumo);
+btnConfirmar?.addEventListener('click', confirmarReserva);
+btnLimpar?.addEventListener('click', limparSelecao);
+cpfEl?.addEventListener('input', aplicarMascaraCpf);
 
-// inicialização automática estável
+document.querySelectorAll('[data-fechar-modal]').forEach((elemento) => {
+  elemento.addEventListener('click', fecharModalReserva);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    fecharModalReserva();
+  }
+});
+
 atualizarResumo();
 renderCalendar();

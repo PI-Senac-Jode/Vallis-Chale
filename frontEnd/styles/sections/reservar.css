@@ -302,6 +302,149 @@
   min-height: 1.4em;
 }
 
+.booking-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.booking-modal.is-open {
+  display: flex;
+}
+
+.booking-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 28, 28, 0.45);
+}
+
+.booking-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 520px);
+  max-height: calc(100vh - 2.5rem);
+  overflow: auto;
+  padding: 2rem;
+  border-radius: 18px;
+  background: #fffdfa;
+  box-shadow: 0 24px 70px rgba(67, 47, 28, 0.25);
+}
+
+.booking-modal__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.9rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 999px;
+  background: #f5ede5;
+  color: #6d3f18;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.booking-modal__eyebrow {
+  display: inline-block;
+  margin-bottom: 0.55rem;
+  color: #9f6427;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.booking-modal__title {
+  margin-bottom: 0.5rem;
+  color: #534033;
+  font-size: 1.8rem;
+}
+
+.booking-modal__subtitle {
+  margin-bottom: 1.4rem;
+  color: #8a7157;
+}
+
+.booking-modal__form {
+  display: grid;
+  gap: 1rem;
+}
+
+.booking-modal__field {
+  display: grid;
+  gap: 0.45rem;
+  color: #705236;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.booking-modal__field input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e6d8cb;
+  border-radius: 12px;
+  background: #fff;
+  color: #534033;
+  font: 500 1rem var(--font-body);
+  letter-spacing: 0;
+  text-transform: none;
+  outline: none;
+}
+
+.booking-modal__field input:focus {
+  border-color: #9f6427;
+  box-shadow: 0 0 0 3px rgba(159, 100, 39, 0.14);
+}
+
+.booking-modal__dates {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.booking-modal__dates div {
+  padding: 0.85rem;
+  border: 1px solid #eadfd5;
+  border-radius: 12px;
+  background: #f9f2ec;
+}
+
+.booking-modal__dates span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #9e866e;
+  font-size: 0.75rem;
+}
+
+.booking-modal__dates strong {
+  color: #6d3f18;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.booking-modal__submit {
+  width: 100%;
+  margin-top: 0.25rem;
+  border: none;
+  border-radius: 999px;
+  padding: 1rem 1.4rem;
+  background: linear-gradient(180deg, #8b5323 0%, #6d3f18 100%);
+  color: #fffaf5;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 @media (max-width: 900px) {
   .calendar-booking {
     grid-template-columns: 1fr;
@@ -330,6 +473,14 @@
   }
 
   .booking-panel__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-modal__card {
+    padding: 1.5rem;
+  }
+
+  .booking-modal__dates {
     grid-template-columns: 1fr;
   }
 }

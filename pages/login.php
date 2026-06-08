@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Valida com as constantes do config.php
     if ($usuario === ADMIN_USER && $senha === ADMIN_PASS) {
         $_SESSION['admin_logado'] = true; // Cria a "chave" de acesso
-        header("Location: criar-chale.php"); // Redireciona para o painel
+        header("Location: gerenciamento.php"); // Redireciona para o painel
         exit;
     } else {
         $erro = "Usuário ou senha incorretos!";
@@ -57,18 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label>Senha:</label>
                         <input type="password" name="senha" required>
                     </div>
-
-                    <div class="options-container">
-                        <div class="option-item">
-                            <p>Lembrar -me</p>
-                            <div class="circle-select"></div>
-                        </div>
-                        <div class="option-item">
-                            <p>Esqueci a senha</p>
-                            <div class="circle-select"></div>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-reserve-now">Login</button>
                 </form>
             </div>
