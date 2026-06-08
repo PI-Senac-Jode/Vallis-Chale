@@ -5,6 +5,8 @@ require_once './frontEnd/includes/chale-images.inc.php';
 $homeChales = [];
 
 try {
+    // Busca no banco todos os chales ativos para montar o carrossel da home.
+    // O LEFT JOIN traz o nome da categoria sem precisar fazer outra consulta depois.
     $homeChales = $pdo->query(
         'SELECT
             ch.*,
@@ -15,6 +17,7 @@ try {
          ORDER BY ch.id ASC'
     )->fetchAll();
 } catch (PDOException $e) {
+    // Se o banco estiver indisponivel, a pagina continua abrindo e mostra o card vazio.
     $homeChales = [];
 }
 ?>

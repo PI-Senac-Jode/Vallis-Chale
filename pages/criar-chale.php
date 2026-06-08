@@ -86,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($action === 'create') {
-                // Insere um novo chale com categoria, diaria, status e datas disponiveis.
+                // INSERT cria um novo registro na tabela chale.
+                // Os valores ficam em marcadores (:nome, :preco_diaria etc.) e entram no execute.
                 $stmt = $pdo->prepare(
                     'INSERT INTO chale (nome, descricao, preco_diaria, datas_disponiveis, disponibilidade, categoria_id)
                      VALUES (:nome, :descricao, :preco_diaria, :datas_disponiveis, :disponibilidade, :categoria_id)'
@@ -105,11 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
-            // Atualiza um chale existente identificado pelo ID enviado no formulario.
             if (!$id) {
                 redirect_chale_feedback('Chale nao encontrado para edicao.', 'danger');
             }
 
+            // UPDATE altera o chale existente pelo ID enviado no formulario.
+            // Assim o painel edita o registro certo sem criar outro chale.
             $stmt = $pdo->prepare(
                 'UPDATE chale
                  SET nome = :nome,
@@ -143,10 +145,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             try {
+                // Primeiro tenta apagar de verdade o chale da tabela.
                 $stmt = $pdo->prepare('DELETE FROM chale WHERE id = :id');
                 $stmt->execute([':id' => $id]);
                 redirect_chale_feedback('Chale excluido com sucesso.', 'danger');
             } catch (PDOException $e) {
+                // Se ja existir reserva ligada a esse chale, o banco bloqueia o DELETE.
+                // Nesse caso mantemos o historico e apenas marcamos o chale como inativo.
                 $stmt = $pdo->prepare('UPDATE chale SET disponibilidade = 0 WHERE id = :id');
                 $stmt->execute([':id' => $id]);
                 redirect_chale_feedback('Este chale possui reservas. Ele foi marcado como inativo.', 'danger');
@@ -162,8 +167,10 @@ $categorias = [];
 $databaseWarning = null;
 
 try {
-    // Carrega categorias para o select e chales para a tabela de gerenciamento.
+    // Carrega categorias para o select do formulario.
     $categorias = $pdo->query('SELECT id, nome FROM categorias_chale ORDER BY nome')->fetchAll();
+
+    // Carrega todos os chales para a tabela do painel, junto com o nome da categoria.
     $chales = $pdo->query(
         'SELECT
             ch.id,

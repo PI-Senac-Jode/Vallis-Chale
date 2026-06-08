@@ -9,7 +9,8 @@ $chale = null;
 
 try {
     if ($chaleId) {
-        // Busca o chale solicitado junto com o nome da categoria.
+        // prepare cria uma consulta segura com marcador :id.
+        // O valor real entra no execute, evitando misturar texto digitado com SQL.
         $stmt = $pdo->prepare(
             'SELECT
                 ch.*,
@@ -23,7 +24,7 @@ try {
     }
 
     if (!$chale) {
-        // Fallback para manter a pagina funcionando mesmo sem ID valido.
+        // Se o ID nao existir, busca o primeiro chale disponivel para nao deixar a pagina vazia.
         $chale = $pdo->query(
             'SELECT
                 ch.*,

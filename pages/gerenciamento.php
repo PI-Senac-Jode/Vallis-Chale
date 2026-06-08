@@ -66,8 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 redirect_with_feedback('A data de saida deve ser maior que a data de entrada.', 'danger');
             }
 
+            // A transacao faz cliente e reserva serem gravados como uma unica operacao.
+            // Se algo der errado no meio, nada fica salvo pela metade.
             $pdo->beginTransaction();
 
+            // Procura se ja existe cliente com o mesmo e-mail ou CPF.
+            // Isso evita criar cliente duplicado antes de inserir a reserva.
             $stmtClienteExistente = $pdo->prepare(
                 'SELECT cpf
                  FROM cliente
@@ -83,11 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($clienteExistente) {
                 $cpfCliente = $clienteExistente['cpf'];
 
+                // Se o e-mail pertence a outro CPF, a reserva e bloqueada para evitar mistura de clientes.
                 if (normalize_cpf($cpfCliente) !== $cpf) {
                     $pdo->rollBack();
                     redirect_with_feedback('Este e-mail ja esta cadastrado com outro CPF.', 'danger');
                 }
 
+                // Cliente encontrado: atualiza nome e e-mail antes de criar a reserva.
                 $stmtCliente = $pdo->prepare(
                     'UPDATE cliente
                      SET nome = :nome, email = :email
@@ -101,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $cpfCliente = $cpf;
 
+                // Cliente novo: cadastra primeiro para depois usar o CPF na reserva.
                 $stmtCliente = $pdo->prepare(
                     'INSERT INTO cliente (cpf, nome, email)
                      VALUES (:cpf, :nome, :email)'
@@ -130,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($action === 'update') {
-            // Atualiza dados editaveis da reserva: chale, periodo e status.
+            // Atualiza no banco os dados editaveis da reserva: chale, periodo e status.
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
             $idChale = filter_input(INPUT_POST, 'id_chale', FILTER_VALIDATE_INT);
             $dataInicio = $_POST['data_inicio'] ?? '';
@@ -165,6 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 redirect_with_feedback('Reserva nao encontrada.', 'danger');
             }
 
+            // Em vez de apagar a reserva, o banco guarda o registro com status "Excluida".
             $stmt = $pdo->prepare('UPDATE reserva SET status = :status WHERE id = :id');
             $stmt->execute([':status' => 'Excluida', ':id' => $id]);
 

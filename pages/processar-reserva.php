@@ -36,6 +36,8 @@ if (strtotime($data_inicio) >= strtotime($data_fim)) {
 try {
     $pdo->beginTransaction();
 
+    // Antes de criar cliente, o banco verifica se ja existe o mesmo CPF ou e-mail.
+    // Assim a reserva fica ligada ao cliente correto e evita cadastro duplicado.
     $stmtClienteExistente = $pdo->prepare(
         'SELECT cpf
          FROM cliente
@@ -51,10 +53,12 @@ try {
     if ($clienteExistente) {
         $cpfCliente = $clienteExistente['cpf'];
 
+        // Mesmo e-mail com CPF diferente indica conflito de cadastro.
         if (normalize_cpf($cpfCliente) !== $cpf) {
             throw new Exception('Este e-mail ja esta cadastrado com outro CPF.');
         }
 
+        // Cliente ja existe: atualiza os dados antes de salvar a nova reserva.
         $stmtCliente = $pdo->prepare(
             'UPDATE cliente
              SET nome = :nome, email = :email
@@ -68,6 +72,7 @@ try {
     } else {
         $cpfCliente = $cpf;
 
+        // Cliente novo: primeiro cria o cliente para depois usar o CPF como referencia.
         $stmtCliente = $pdo->prepare(
             'INSERT INTO cliente (cpf, nome, email)
              VALUES (:cpf, :nome, :email)'
@@ -79,6 +84,8 @@ try {
         ]);
     }
 
+    // Cria a reserva ligando o chale escolhido ao cliente encontrado ou recem-criado.
+    // O status inicial fica como Pendente para o administrador confirmar depois.
     $stmtReserva = $pdo->prepare(
         "INSERT INTO reserva (id_chale, id_cliente, data_inicio, data_fim, status)
          VALUES (:id_chale, :id_cliente, :data_inicio, :data_fim, 'Pendente')"
@@ -106,5 +113,10 @@ try {
         $pdo->rollBack();
     }
 
-    die('Erro ao salvar a reserva no banco de dados: ' . $e->getMessage());
+    if ($e->getMessage() === 'Este e-mail ja esta cadastrado com outro CPF.') {
+        die('Erro: ' . $e->getMessage());
+    }
+
+    error_log('Erro ao salvar reserva: ' . $e->getMessage());
+    die('Erro ao salvar a reserva. Tente novamente mais tarde.');
 }

@@ -8,22 +8,25 @@ $chaleReserva = null;
 
 try {
     if ($chaleId) {
-        // Busca o chale escolhido pelo visitante.
+        // Busca no banco o chale escolhido pelo visitante na pagina anterior.
+        // Como o ID vem da URL, usamos prepare/execute para consultar com seguranca.
         $stmt = $pdo->prepare('SELECT id, nome, preco_diaria FROM chale WHERE id = :id');
         $stmt->execute([':id' => $chaleId]);
         $chaleReserva = $stmt->fetch();
     }
 
     if (!$chaleReserva) {
-        // Fallback: se o ID nao existir, usa o primeiro chale ativo cadastrado.
+        // Se nao veio ID ou ele nao existe, usa o primeiro chale ativo cadastrado.
         $chaleReserva = $pdo->query('SELECT id, nome, preco_diaria FROM chale WHERE disponibilidade = 1 ORDER BY id ASC LIMIT 1')->fetch();
     }
 } catch (PDOException $e) {
+    // Se a consulta falhar, usamos valores padrao abaixo para a tela nao quebrar.
     $chaleReserva = null;
 }
 
 $reservaChaleName = $chaleReserva['nome'] ?? 'Chale';
 $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
+$reservaChaleId = (int) ($chaleReserva['id'] ?? 1);
 ?>
 
 <!doctype html>
@@ -34,7 +37,7 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
     <title>Calendario de Reserva | <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?></title>
     <meta
       name="description"
-      content="CalendÃ¡rio funcional para reservas do ChalÃ© ParaÃ­so, com seleÃ§Ã£o de check-in, check-out, cÃ¡lculo de noites e visual premium."
+      content="Calendario funcional para reservas do <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?>, com selecao de check-in, check-out e calculo de noites."
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,11 +68,11 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
       <section class="calendar-booking container" aria-label="Reserva do <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?>">
         <article class="calendar-card" aria-labelledby="calendar-title">
           <div class="calendar-card__header">
-            <button id="prev" class="calendar-nav" type="button" aria-label="MÃªs anterior">
+            <button id="prev" class="calendar-nav" type="button" aria-label="Mes anterior">
               &#8249;
             </button>
             <h2 id="mesAno" class="calendar-card__title">Abril 2026</h2>
-            <button id="next" class="calendar-nav" type="button" aria-label="PrÃ³ximo mÃªs">
+            <button id="next" class="calendar-nav" type="button" aria-label="Próximo mês">
               &#8250;
             </button>
           </div>
@@ -81,7 +84,7 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
             <span>QUA</span>
             <span>QUI</span>
             <span>SEX</span>
-            <span>SÃB</span>
+            <span>SÁB</span>
           </div>
 
           <div id="dias" class="calendar-grid" role="grid" aria-labelledby="calendar-title"></div>
@@ -89,7 +92,7 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
 
         <aside class="booking-panel">
           <div class="price-card">
-            <label class="price-card__label" for="precoNoite">PreÃ§o por Noite</label>
+            <label class="price-card__label" for="precoNoite">Preço por Noite</label>
             <div class="price-card__field">
               <span>R$</span>
               <input
@@ -98,7 +101,7 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
                 min="0"
                 step="10"
                 value="<?= htmlspecialchars((string) $reservaChalePrice, ENT_QUOTES, 'UTF-8') ?>"
-                aria-label="PreÃ§o por noite"'
+                aria-label="Preço por noite"
                 readonly
               />
             </div>
@@ -123,7 +126,7 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
             Confirmar Reserva
           </button>
 
-          <button id="limparDatas" class="booking-panel__link" type="button">Limpar seleÃ§Ã£o</button>
+          <button id="limparDatas" class="booking-panel__link" type="button">Limpar seleção</button>
 
           <p id="resumoTotal" class="booking-panel__total">Total estimado: R$ 6.750</p>
           <p id="mensagemReserva" class="booking-panel__message" aria-live="polite"></p>
@@ -142,7 +145,8 @@ $reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
           <p class="booking-modal__subtitle">Preencha seus dados para concluir a solicita&ccedil;&atilde;o.</p>
 
           <form action="<?= BASE_URL ?>/pages/processar-reserva.php" method="POST" class="booking-modal__form">
-            <input type="hidden" name="id_chale" value="1">
+            <!-- Envia ao PHP o ID do chale carregado do banco para vincular a reserva corretamente. -->
+            <input type="hidden" name="id_chale" value="<?= $reservaChaleId ?>">
             <input type="hidden" id="data_inicio" name="data_inicio" required>
             <input type="hidden" id="data_fim" name="data_fim" required>
 

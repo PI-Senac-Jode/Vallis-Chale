@@ -59,6 +59,8 @@ function formatarData(data) {
 }
 
 function formatarDataInput(data) {
+  // Os inputs de data enviados ao PHP precisam estar no formato AAAA-MM-DD.
+  // Esse formato e o que o MySQL espera para campos DATE.
   if (!data) return '';
 
   const ano = data.getFullYear();
@@ -211,6 +213,8 @@ function abrirModalReserva() {
   const inputInicio = document.getElementById('data_inicio');
   const inputFim = document.getElementById('data_fim');
 
+  // Copia as datas escolhidas no calendario para campos hidden do formulario.
+  // Quando o usuario envia, processar-reserva.php recebe esses valores por POST.
   if (inputInicio) inputInicio.value = formatarDataInput(checkin);
   if (inputFim) inputFim.value = formatarDataInput(checkout);
   if (modalCheckinEl) modalCheckinEl.textContent = formatarData(checkin);
@@ -232,6 +236,7 @@ function fecharModalReserva() {
 }
 
 function aplicarMascaraCpf(event) {
+  // A mascara ajuda o usuario a digitar, mas o PHP remove a pontuacao antes de salvar.
   const numeros = event.target.value.replace(/\D/g, '').slice(0, 11);
   const partes = [];
 
@@ -257,7 +262,8 @@ function confirmarReserva() {
   }
 
   const payload = {
-    chale: 'Chal\u00e9 Para\u00edso',
+    idChale: document.querySelector('input[name="id_chale"]')?.value || null,
+    chale: document.body.dataset.chaleName || 'Chale',
     checkin: formatarDataInput(checkin),
     checkout: formatarDataInput(checkout),
     noites,
@@ -266,6 +272,8 @@ function confirmarReserva() {
     criadoEm: new Date().toISOString(),
   };
 
+  // Guarda uma copia local apenas para apoio da interface.
+  // A gravacao oficial no banco acontece quando o formulario PHP e enviado.
   localStorage.setItem('vallisChaleReserva', JSON.stringify(payload));
   mensagemReservaEl.textContent = '';
   abrirModalReserva();
