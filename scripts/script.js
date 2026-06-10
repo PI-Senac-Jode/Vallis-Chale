@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const firstCard = cards[0];
       const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
 
-      return firstCard.getBoundingClientRect().width + gap;
+      return Math.round(firstCard.getBoundingClientRect().width + gap);
     };
 
     const getMaxIndex = () => Math.max(0, Math.ceil((track.scrollWidth - track.clientWidth) / getStep()));
