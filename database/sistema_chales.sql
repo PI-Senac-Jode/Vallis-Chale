@@ -22,6 +22,7 @@ CREATE TABLE chale (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
+    imagem_url VARCHAR(255),
     preco_diaria DECIMAL(10,2) NOT NULL,
     datas_disponiveis JSON,
     disponibilidade BOOLEAN DEFAULT TRUE,

@@ -67,6 +67,43 @@ function dates_to_text(?string $json): string
     return implode("\n", $dates);
 }
 
+function save_chale_image_upload(?array $file): ?string
+{
+    if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('Nao foi possivel enviar a imagem do chale.');
+    }
+
+    $allowedTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+    ];
+    $mimeType = mime_content_type($file['tmp_name']);
+
+    if (!isset($allowedTypes[$mimeType])) {
+        throw new RuntimeException('Envie uma imagem JPG, PNG ou WEBP.');
+    }
+
+    $uploadDir = dirname(__DIR__) . '/src/assets/img/chales';
+
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true)) {
+        throw new RuntimeException('Nao foi possivel criar a pasta de imagens.');
+    }
+
+    $filename = 'chale-' . date('YmdHis') . '-' . bin2hex(random_bytes(4)) . '.' . $allowedTypes[$mimeType];
+    $destination = $uploadDir . '/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new RuntimeException('Nao foi possivel salvar a imagem do chale.');
+    }
+
+    return 'chales/' . $filename;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -80,21 +117,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $categoriaId = filter_input(INPUT_POST, 'categoria_id', FILTER_VALIDATE_INT);
             $disponibilidade = ($_POST['disponibilidade'] ?? '1') === '1' ? 1 : 0;
             $datasDisponiveis = normalize_available_dates($_POST['datas_disponiveis'] ?? '');
+            $imagemUrl = save_chale_image_upload($_FILES['imagem'] ?? null);
 
             if (!$nome || $precoDiaria <= 0 || !$categoriaId) {
                 redirect_chale_feedback('Preencha nome, valor e categoria corretamente.', 'danger');
             }
 
             if ($action === 'create') {
+                if (!$imagemUrl) {
+                    redirect_chale_feedback('Envie uma foto do chale.', 'danger');
+                }
+
                 // INSERT cria um novo registro na tabela chale.
                 // Os valores ficam em marcadores (:nome, :preco_diaria etc.) e entram no execute.
                 $stmt = $pdo->prepare(
-                    'INSERT INTO chale (nome, descricao, preco_diaria, datas_disponiveis, disponibilidade, categoria_id)
-                     VALUES (:nome, :descricao, :preco_diaria, :datas_disponiveis, :disponibilidade, :categoria_id)'
+                    'INSERT INTO chale (nome, descricao, imagem_url, preco_diaria, datas_disponiveis, disponibilidade, categoria_id)
+                     VALUES (:nome, :descricao, :imagem_url, :preco_diaria, :datas_disponiveis, :disponibilidade, :categoria_id)'
                 );
                 $stmt->execute([
                     ':nome' => $nome,
                     ':descricao' => $descricao,
+                    ':imagem_url' => $imagemUrl,
                     ':preco_diaria' => $precoDiaria,
                     ':datas_disponiveis' => $datasDisponiveis,
                     ':disponibilidade' => $disponibilidade,
@@ -112,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // UPDATE altera o chale existente pelo ID enviado no formulario.
             // Assim o painel edita o registro certo sem criar outro chale.
+            $imageSql = $imagemUrl ? ', imagem_url = :imagem_url' : '';
             $stmt = $pdo->prepare(
                 'UPDATE chale
                  SET nome = :nome,
@@ -120,9 +164,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      datas_disponiveis = :datas_disponiveis,
                      disponibilidade = :disponibilidade,
                      categoria_id = :categoria_id
+                     ' . $imageSql . '
                  WHERE id = :id'
             );
-            $stmt->execute([
+            $params = [
                 ':id' => $id,
                 ':nome' => $nome,
                 ':descricao' => $descricao,
@@ -130,7 +175,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':datas_disponiveis' => $datasDisponiveis,
                 ':disponibilidade' => $disponibilidade,
                 ':categoria_id' => $categoriaId,
-            ]);
+            ];
+
+            if ($imagemUrl) {
+                $params[':imagem_url'] = $imagemUrl;
+            }
+
+            $stmt->execute($params);
 
             redirect_chale_feedback('Chale atualizado com sucesso.', 'edit');
         }
@@ -176,6 +227,7 @@ try {
             ch.id,
             ch.nome,
             ch.descricao,
+            ch.imagem_url,
             ch.preco_diaria,
             ch.datas_disponiveis,
             ch.disponibilidade,
@@ -313,7 +365,7 @@ if (!$feedback && $databaseWarning) {
         <h2 class="modal-title" id="modalChaleTitle">Novo Chale</h2>
         <p class="modal-subtitle">Preencha as informacoes do chale.</p>
 
-        <form class="modal-form" method="POST">
+        <form class="modal-form" method="POST" enctype="multipart/form-data">
           <input type="hidden" id="form-action" name="action" value="create" />
           <input type="hidden" id="chale-id" name="id" />
 
@@ -341,6 +393,12 @@ if (!$feedback && $databaseWarning) {
           <div class="input-container">
             <label for="chale-descricao">Descricao</label>
             <textarea id="chale-descricao" name="descricao" rows="4" placeholder="Descreva o chale"></textarea>
+          </div>
+
+          <div class="input-container">
+            <label for="chale-imagem">Foto</label>
+            <input type="file" id="chale-imagem" name="imagem" accept="image/png,image/jpeg,image/webp" />
+            <small id="chale-imagem-atual" class="input-hint"></small>
           </div>
 
           <div class="input-container">

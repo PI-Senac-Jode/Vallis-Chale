@@ -1,6 +1,5 @@
- <?php
+<?php
 require_once 'config.php';
-require_once './frontEnd/includes/chale-images.inc.php';
 
 $homeChales = [];
 
@@ -163,9 +162,13 @@ try {
           <?php foreach ($homeChales as $chale): ?>
             <?php
               $chaleName = $chale['nome'] ?? 'Chale';
-              $chaleImage = get_chale_image($chale, './');
+              $chaleImage = !empty($chale['imagem_url'])
+                ? './src/assets/img/' . ltrim($chale['imagem_url'], '/')
+                : './src/assets/img/placeholder.png';
               $chalePrice = number_format((float) ($chale['preco_diaria'] ?? 0), 2, ',', '.');
               $chaleCategory = $chale['categoria_nome'] ?? '';
+              $chaleDescription = trim((string) ($chale['descricao'] ?? ''));
+              $chaleExcerpt = strlen($chaleDescription) > 135 ? substr($chaleDescription, 0, 132) . '...' : $chaleDescription;
             ?>
             <article class="chale-card">
               <img
@@ -181,7 +184,7 @@ try {
                   <?php endif; ?>
                   <span>R$ <?= $chalePrice ?>/noite</span>
                 </div>
-                <p class="chale-card__text"><?= htmlspecialchars(get_chale_excerpt($chale['descricao'] ?? null), ENT_QUOTES, 'UTF-8') ?></p>
+                <p class="chale-card__text"><?= htmlspecialchars($chaleExcerpt ?: 'Chale disponivel para reserva.', ENT_QUOTES, 'UTF-8') ?></p>
                 <a href="./pages/chale.php?id=<?= (int) $chale['id'] ?>" class="btn btn-accent">Saiba mais</a>
               </div>
             </article>

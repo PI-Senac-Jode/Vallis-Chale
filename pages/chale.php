@@ -1,6 +1,5 @@
 <?php
 require_once '../config.php';
-require_once '../frontEnd/includes/chale-images.inc.php';
 
 // Pagina de detalhes de um chale.
 // O ID vem pela URL; se nao vier, a pagina mostra o primeiro chale ativo.
@@ -45,7 +44,9 @@ try {
 // Todo texto vindo do banco e exibido com htmlspecialchars no template.
 $chaleName = $chale['nome'] ?? 'Chale indisponivel';
 $chaleDescription = $chale['descricao'] ?? 'Este chale ainda nao esta disponivel para exibicao.';
-$chaleImage = $chale ? get_chale_image($chale, '../') : '../src/assets/img/placeholder.png';
+$chaleImage = ($chale && !empty($chale['imagem_url']))
+    ? '../src/assets/img/' . ltrim($chale['imagem_url'], '/')
+    : '../src/assets/img/placeholder.png';
 $chalePrice = $chale ? number_format((float) ($chale['preco_diaria'] ?? 0), 2, ',', '.') : null;
 $chaleCategory = $chale['categoria_nome'] ?? null;
 ?>

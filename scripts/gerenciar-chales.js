@@ -43,6 +43,8 @@ function openCreateModal() {
   document.getElementById('chale-descricao').value = '';
   document.getElementById('chale-datas').value = '';
   document.getElementById('chale-status').value = '1';
+  document.getElementById('chale-imagem').value = '';
+  document.getElementById('chale-imagem-atual').textContent = 'Escolha uma foto para cadastrar o chale.';
   openModal('modalChale');
 }
 
@@ -57,6 +59,10 @@ function openEditModal(chale) {
   document.getElementById('chale-descricao').value = chale.descricao || '';
   document.getElementById('chale-datas').value = datesToTextareaValue(chale.datas_disponiveis);
   document.getElementById('chale-status').value = String(Number(chale.disponibilidade || 0));
+  document.getElementById('chale-imagem').value = '';
+  document.getElementById('chale-imagem-atual').textContent = chale.imagem_url
+    ? `Foto atual: ${chale.imagem_url}. Envie outra apenas se quiser trocar.`
+    : 'Este chale ainda nao tem foto. Envie uma imagem para exibi-lo corretamente.';
   openModal('modalChale');
 }
 

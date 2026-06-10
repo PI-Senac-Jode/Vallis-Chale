@@ -43,17 +43,17 @@ INSERT INTO cliente (cpf, nome, email) VALUES
 ('131.131.131-13', 'Daniel Nunes', 'daniel@email.com');
 
 
-INSERT INTO chale (nome, descricao, preco_diaria, datas_disponiveis, disponibilidade, categoria_id) VALUES
-('Chalé do Bosque', 'Chalé aconchegante cercado por natureza.', 250.00, '["2026-06-01", "2026-06-02"]', TRUE, 1),
-('Chalé da Montanha', 'Vista espetacular com lareira privativa.', 450.00, '["2026-06-10", "2026-06-11"]', TRUE, 2),
-('Refúgio das Flores', 'Perfeito para casais, ambiente romântico.', 300.00, '["2026-06-05"]', TRUE, 1),
-('Chalé Luxo Premium', 'Hidromassagem, ar condicionado e luxo total.', 850.00, '["2026-07-01", "2026-07-02"]', TRUE, 3),
-('Cabana Rústica', 'Estilo vintage aconchegante com fogão a lenha.', 200.00, '["2026-06-20"]', TRUE, 1),
-('Chalé Horizonte', 'Vista panorâmica do vale ao nascer do sol.', 500.00, '["2026-06-15", "2026-06-16"]', TRUE, 2),
-('Suíte Master Serra', 'Conforto absoluto com varanda gourmet.', 900.00, '["2026-07-10"]', TRUE, 3),
-('Chalé do Lago', 'Ideal para quem busca paz e tranquilidade.', 380.00, '["2026-06-08", "2026-06-09"]', TRUE, 2),
-('Chalé Aconchego', 'Compacto, bem equipado e muito confortável.', 220.00, '["2026-06-25"]', TRUE, 1),
-('Chalé Vista Real', 'A experiência premium com vista deslumbrante.', 1200.00, '["2026-08-01"]', TRUE, 3);
+INSERT INTO chale (nome, descricao, imagem_url, preco_diaria, datas_disponiveis, disponibilidade, categoria_id) VALUES
+('Chalé do Bosque', 'Chalé aconchegante cercado por natureza.', 'chale-sossego.png', 250.00, '["2026-06-01", "2026-06-02"]', TRUE, 1),
+('Chalé da Montanha', 'Vista espetacular com lareira privativa.', 'chale-maravilha.png', 450.00, '["2026-06-10", "2026-06-11"]', TRUE, 2),
+('Refúgio das Flores', 'Perfeito para casais, ambiente romântico.', 'chale-saudade.png', 300.00, '["2026-06-05"]', TRUE, 1),
+('Chalé Luxo Premium', 'Hidromassagem, ar condicionado e luxo total.', 'chale-paraiso.png', 850.00, '["2026-07-01", "2026-07-02"]', TRUE, 3),
+('Cabana Rústica', 'Estilo vintage aconchegante com fogão a lenha.', 'chale-3.png', 200.00, '["2026-06-20"]', TRUE, 1),
+('Chalé Horizonte', 'Vista panorâmica do vale ao nascer do sol.', 'chale-maravilha.png', 500.00, '["2026-06-15", "2026-06-16"]', TRUE, 2),
+('Suíte Master Serra', 'Conforto absoluto com varanda gourmet.', 'chale-paraiso.png', 900.00, '["2026-07-10"]', TRUE, 3),
+('Chalé do Lago', 'Ideal para quem busca paz e tranquilidade.', 'chale-com-piscina.png', 380.00, '["2026-06-08", "2026-06-09"]', TRUE, 2),
+('Chalé Aconchego', 'Compacto, bem equipado e muito confortável.', 'chale-interior.png', 220.00, '["2026-06-25"]', TRUE, 1),
+('Chalé Vista Real', 'A experiência premium com vista deslumbrante.', 'chale-3.png', 1200.00, '["2026-08-01"]', TRUE, 3);
 
 
 INSERT INTO reserva (id_chale, id_cliente, data_inicio, data_fim, status) VALUES
