@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="styles/sections/avaliacoes.css" />
   <link rel="stylesheet" href="styles/sections/map.css" />
   <link rel="stylesheet" href="styles/sections/footer.css" />
-  <script src="./js/script.js" defer></script>
+  <script src="./scripts/script.js" defer></script>
 </head>
 <body>
 
@@ -143,7 +143,12 @@
       <h2 class="section-title">HOSPEDAGENS</h2>
       <p class="section-subtitle">Chalés exclusivos que unem conforto moderno e total privacidade em meio à natureza preservada</p>
 
-      <div class="hospedagens__grid">
+      <div class="hospedagens__carousel" data-carousel>
+        <button class="hospedagens__control hospedagens__control--prev" type="button" data-carousel-prev aria-label="Hospedagem anterior">
+          <span aria-hidden="true">‹</span>
+        </button>
+
+        <div class="hospedagens__track" data-carousel-track>
         <article class="chale-card">
           <img class="chale-card__image" src="./assets/img/chale-maravilha.png" alt="Chalé Paraíso" />
           <div class="chale-card__body">
@@ -157,7 +162,7 @@
         </article>
 
         <article class="chale-card">
-          <img class="chale-card__image" src="./assets/img/chale-paraiso.png" alt="Chalé Paraíso" />
+          <img class="chale-card__image" src="./assets/img/chale-paraiso.png" alt="Chalé Maravilha" />
           <div class="chale-card__body">
             <h3 class="chale-card__title">Chalé Maravilha</h3>
             <div class="chale-card__meta">
@@ -169,7 +174,7 @@
         </article>
 
         <article class="chale-card">
-          <img class="chale-card__image" src="./assets/img/chale-sossego.png" alt="Chalé Paraíso" />
+          <img class="chale-card__image" src="./assets/img/chale-sossego.png" alt="Chalé Sossego" />
           <div class="chale-card__body">
             <h3 class="chale-card__title">Chalé Sossego</h3>
             <div class="chale-card__meta">
@@ -179,7 +184,50 @@
             <a href="#" class="btn btn-accent">Saiba mais</a>
           </div>
         </article>
+
+        <article class="chale-card">
+          <img class="chale-card__image" src="./assets/img/chale-saudade.png" alt="Chalé Saudade" />
+          <div class="chale-card__body">
+            <h3 class="chale-card__title">Chalé Saudade</h3>
+            <div class="chale-card__meta">
+              
+            </div>
+            <p class="chale-card__text">Charme rústico com vista para a mata, perfeito para desacelerar e aproveitar dias tranquilos a dois.</p>
+            <a href="#" class="btn btn-accent">Saiba mais</a>
+          </div>
+        </article>
+
+        <article class="chale-card">
+          <img class="chale-card__image" src="./assets/img/chale-com-piscina.png" alt="Chalé Aurora" />
+          <div class="chale-card__body">
+            <h3 class="chale-card__title">Chalé Aurora</h3>
+            <div class="chale-card__meta">
+              
+            </div>
+            <p class="chale-card__text">Piscina privativa, luz natural e uma vista aberta para começar o dia com o pé na natureza.</p>
+            <a href="#" class="btn btn-accent">Saiba mais</a>
+          </div>
+        </article>
+
+        <article class="chale-card">
+          <img class="chale-card__image" src="./assets/img/chale-3.png" alt="Chalé Encanto" />
+          <div class="chale-card__body">
+            <h3 class="chale-card__title">Chalé Encanto</h3>
+            <div class="chale-card__meta">
+              
+            </div>
+            <p class="chale-card__text">Arquitetura acolhedora e vista preservada para transformar a estadia em uma experiência memorável.</p>
+            <a href="#" class="btn btn-accent">Saiba mais</a>
+          </div>
+        </article>
+        </div>
+
+        <button class="hospedagens__control hospedagens__control--next" type="button" data-carousel-next aria-label="Próxima hospedagem">
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
+
+      <div class="hospedagens__dots" data-carousel-dots aria-label="Selecionar hospedagem"></div>
 
     </div>
   </section>

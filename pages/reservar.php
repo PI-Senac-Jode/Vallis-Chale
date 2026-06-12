@@ -1,14 +1,43 @@
-<?php require_once '../config.php'; ?>
+﻿<?php
+require_once '../config.php';
+
+// Identifica qual chale sera reservado a partir do parametro da URL.
+// Exemplo: reservar.php?id_chale=3
+$chaleId = filter_input(INPUT_GET, 'id_chale', FILTER_VALIDATE_INT);
+$chaleReserva = null;
+
+try {
+    if ($chaleId) {
+        // Busca no banco o chale escolhido pelo visitante na pagina anterior.
+        // Como o ID vem da URL, usamos prepare/execute para consultar com seguranca.
+        $stmt = $pdo->prepare('SELECT id, nome, preco_diaria FROM chale WHERE id = :id');
+        $stmt->execute([':id' => $chaleId]);
+        $chaleReserva = $stmt->fetch();
+    }
+
+    if (!$chaleReserva) {
+        // Se nao veio ID ou ele nao existe, usa o primeiro chale ativo cadastrado.
+        $chaleReserva = $pdo->query('SELECT id, nome, preco_diaria FROM chale WHERE disponibilidade = 1 ORDER BY id ASC LIMIT 1')->fetch();
+    }
+} catch (PDOException $e) {
+    // Se a consulta falhar, usamos valores padrao abaixo para a tela nao quebrar.
+    $chaleReserva = null;
+}
+
+$reservaChaleName = $chaleReserva['nome'] ?? 'Chale';
+$reservaChalePrice = (float) ($chaleReserva['preco_diaria'] ?? 450);
+$reservaChaleId = (int) ($chaleReserva['id'] ?? 1);
+?>
 
 <!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calendário de Reserva | Chalé Paraíso</title>
+    <title>Calendario de Reserva | <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?></title>
     <meta
       name="description"
-      content="Calendário funcional para reservas do Chalé Paraíso, com seleção de check-in, check-out, cálculo de noites e visual premium."
+      content="Calendario funcional para reservas do <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?>, com selecao de check-in, check-out e calculo de noites."
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +53,7 @@
     <link rel="stylesheet" href="../frontEnd/styles/sections/footer.css" />
     <link rel="stylesheet" href="../frontEnd/styles/sections/reservar.css" />
   </head>
-  <body class="page-calendar">
+  <body class="page-calendar" data-chale-name="<?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?>">
   
   <!-- Navbar -->
   <?php include "../frontEnd/includes/nav.inc.php"; ?>
@@ -33,13 +62,13 @@
     <main class="calendar-page">
       <section class="calendar-page__hero container">
         <span class="calendar-page__eyebrow">reserva online</span>
-        <h1 class="calendar-page__title">Chalé Paraíso</h1>
+        <h1 class="calendar-page__title"><?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?></h1>
       </section>
 
-      <section class="calendar-booking container" aria-label="Reserva do Chalé Paraíso">
+      <section class="calendar-booking container" aria-label="Reserva do <?= htmlspecialchars($reservaChaleName, ENT_QUOTES, 'UTF-8') ?>">
         <article class="calendar-card" aria-labelledby="calendar-title">
           <div class="calendar-card__header">
-            <button id="prev" class="calendar-nav" type="button" aria-label="Mês anterior">
+            <button id="prev" class="calendar-nav" type="button" aria-label="Mes anterior">
               &#8249;
             </button>
             <h2 id="mesAno" class="calendar-card__title">Abril 2026</h2>
@@ -71,8 +100,8 @@
                 type="number"
                 min="0"
                 step="10"
-                value="450"
-                aria-label="Preço por noite"'
+                value="<?= htmlspecialchars((string) $reservaChalePrice, ENT_QUOTES, 'UTF-8') ?>"
+                aria-label="Preço por noite"
                 readonly
               />
             </div>
@@ -116,7 +145,8 @@
           <p class="booking-modal__subtitle">Preencha seus dados para concluir a solicita&ccedil;&atilde;o.</p>
 
           <form action="<?= BASE_URL ?>/pages/processar-reserva.php" method="POST" class="booking-modal__form">
-            <input type="hidden" name="id_chale" value="1">
+            <!-- Envia ao PHP o ID do chale carregado do banco para vincular a reserva corretamente. -->
+            <input type="hidden" name="id_chale" value="<?= $reservaChaleId ?>">
             <input type="hidden" id="data_inicio" name="data_inicio" required>
             <input type="hidden" id="data_fim" name="data_fim" required>
 
@@ -156,3 +186,4 @@
     <script src="<?= BASE_URL ?>/scripts/reservar.js"></script>
   </body>
 </html>
+

@@ -1,29 +1,31 @@
-<?php 
-require_once '../config.php'; 
+<?php
+require_once '../config.php';
 
-// Verifica se o formulário foi enviado
+// A autenticacao do administrador acontece nesta pagina.
+// O config.php ja iniciou a sessao e carregou ADMIN_USER/ADMIN_PASS.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'] ?? '';
     $senha = $_POST['senha'] ?? '';
 
-    // Valida com as constantes do config.php
+    // Compara os dados digitados com as constantes definidas em config.php.
+    // Se estiverem corretos, grava uma flag na sessao para liberar o painel.
     if ($usuario === ADMIN_USER && $senha === ADMIN_PASS) {
-        $_SESSION['admin_logado'] = true; // Cria a "chave" de acesso
-        header("Location: gerenciamento.php"); // Redireciona para o painel
+        $_SESSION['admin_logado'] = true;
+        header("Location: gerenciamento.php");
         exit;
     } else {
-        $erro = "Usuário ou senha incorretos!";
+        $erro = "Usuario ou senha incorretos!";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vallis Chalé — Refúgio de luxo na montanha</title>
-  <meta name="description" content="Vallis Chalé — chalés exclusivos que unem conforto moderno e natureza preservada." />
+  <title>Login | Vallis Chale</title>
+  <meta name="description" content="Acesso administrativo do projeto Vallis Chale." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,18 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="../frontEnd/styles/sections/login.css">
 </head>
 <body>
-  <!-- Navbar -->
-  
   <?php include "../frontEnd/includes/nav.inc.php"; ?>
-  <!--  -->
 
   <div class="container login-group">
         <section class="left-side">
             <div class="login-box">
                 <h1>LOGIN</h1>
+                <?php if (!empty($erro)): ?>
+                    <p class="login-error"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
+                <?php endif; ?>
                 <form action="login.php" method="POST">
                     <div class="input-group">
-                        <label>Usuário:</label>
+                        <label>Usuario:</label>
                         <input type="text" name="usuario" required>
                     </div>
 
@@ -63,14 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
          <div class="right-side">
             <div class="image-container">
-                <img src="../src/assets/img/chale-interior-3.png" alt="Fachada Vallis Chalé">
+                <img src="../src/assets/img/chale-interior-3.png" alt="Fachada Vallis Chale">
             </div>
           </div>
 </div>
-   <!-- footer -->
-  
-  <?php include "../frontEnd/includes/footer.inc.php"; ?>
-  <!--  -->
 
+  <?php include "../frontEnd/includes/footer.inc.php"; ?>
 </body>
 </html>

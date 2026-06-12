@@ -396,6 +396,11 @@ td {
   resize: vertical;
 }
 
+.input-hint {
+  color: var(--on-surface-muted);
+  font-size: 0.78rem;
+}
+
 .input-container input:focus,
 .input-container textarea:focus,
 .input-container select:focus {

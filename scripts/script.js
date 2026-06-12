@@ -1,21 +1,117 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Troca a imagem principal da galeria pela miniatura clicada.
   const mainImage = document.getElementById('mainImage');
 
-  // pega todas as imagens MENOS a do centro
-  const thumbnails = document.querySelectorAll('.gallery__item:not(.gallery__item--center) img');
+  if (mainImage) {
+    const thumbnails = document.querySelectorAll('.gallery__item:not(.gallery__item--center) img');
 
-  thumbnails.forEach(img => {
-    img.addEventListener('click', () => {
-      // troca a imagem principal
-      const tempSrc = mainImage.src;
-      const tempAlt = mainImage.alt;
+    thumbnails.forEach(img => {
+      img.addEventListener('click', () => {
+        const tempSrc = mainImage.src;
+        const tempAlt = mainImage.alt;
 
-      mainImage.src = img.src;
-      mainImage.alt = img.alt;
+        mainImage.src = img.src;
+        mainImage.alt = img.alt;
 
-      // opcional: manter preview trocando com a que estava no centro
-      img.src = tempSrc;
-      img.alt = tempAlt;
+        img.src = tempSrc;
+        img.alt = tempAlt;
+      });
     });
+  }
+
+  document.querySelectorAll('[data-carousel]').forEach(carousel => {
+    // Carrossel das hospedagens exibidas na pagina inicial.
+    const track = carousel.querySelector('[data-carousel-track]');
+    const prevButton = carousel.querySelector('[data-carousel-prev]');
+    const nextButton = carousel.querySelector('[data-carousel-next]');
+    const dotsContainer = carousel.parentElement.querySelector('[data-carousel-dots]');
+
+    if (!track || !prevButton || !nextButton) {
+      return;
+    }
+
+    const cards = Array.from(track.querySelectorAll('.chale-card'));
+
+    if (cards.length === 0) {
+      return;
+    }
+
+    const getStep = () => {
+      // Cada movimento do carrossel considera largura do card + espacamento do CSS.
+      const firstCard = cards[0];
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+
+      return Math.round(firstCard.getBoundingClientRect().width + gap);
+    };
+
+    const getMaxIndex = () => Math.max(0, Math.ceil((track.scrollWidth - track.clientWidth) / getStep()));
+
+    const getActiveIndex = () => Math.min(Math.round(track.scrollLeft / getStep()), getMaxIndex());
+
+    const renderDots = () => {
+      // Cria os indicadores conforme a quantidade de grupos rolaveis.
+      if (!dotsContainer) {
+        return;
+      }
+
+      const dotCount = getMaxIndex() + 1;
+
+      if (dotsContainer.children.length === dotCount) {
+        return;
+      }
+
+      dotsContainer.innerHTML = '';
+
+      Array.from({ length: dotCount }).forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'hospedagens__dot';
+        dot.setAttribute('aria-label', `Ir para grupo ${index + 1} de hospedagens`);
+        dot.addEventListener('click', () => {
+          track.scrollTo({
+            left: getStep() * index,
+            behavior: 'smooth'
+          });
+        });
+
+        dotsContainer.appendChild(dot);
+      });
+    };
+
+    const updateCarousel = () => {
+      // Atualiza botoes e indicador ativo conforme a posicao atual do scroll.
+      renderDots();
+
+      const activeIndex = getActiveIndex();
+      const maxScroll = track.scrollWidth - track.clientWidth - 2;
+
+      prevButton.disabled = track.scrollLeft <= 2;
+      nextButton.disabled = track.scrollLeft >= maxScroll || maxScroll <= 0;
+
+      if (dotsContainer) {
+        dotsContainer.querySelectorAll('.hospedagens__dot').forEach((dot, index) => {
+          dot.classList.toggle('is-active', index === activeIndex);
+        });
+      }
+    };
+
+    prevButton.addEventListener('click', () => {
+      track.scrollBy({
+        left: -getStep(),
+        behavior: 'smooth'
+      });
+    });
+
+    nextButton.addEventListener('click', () => {
+      track.scrollBy({
+        left: getStep(),
+        behavior: 'smooth'
+      });
+    });
+
+    track.addEventListener('scroll', updateCarousel);
+    window.addEventListener('resize', updateCarousel);
+    renderDots();
+    updateCarousel();
   });
 });

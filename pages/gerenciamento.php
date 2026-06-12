@@ -1,6 +1,7 @@
 <?php
 require_once '../config.php';
 
+// Protege o painel: apenas usuarios autenticados em login.php podem acessar.
 if (!isset($_SESSION['admin_logado']) || $_SESSION['admin_logado'] !== true) {
     header('Location: login.php');
     exit;
@@ -11,6 +12,7 @@ unset($_SESSION['feedback']);
 
 function redirect_with_feedback(string $message, string $type = 'success'): void
 {
+    // Centraliza o padrao POST/Redirect/GET para evitar reenvio de formulario.
     $_SESSION['feedback'] = ['message' => $message, 'type' => $type];
     header('Location: gerenciamento.php');
     exit;
@@ -46,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if ($action === 'create') {
+            // Cria uma reserva pelo painel administrativo.
+            // Primeiro valida hospede, chale e periodo; depois grava cliente e reserva.
             $nome = trim($_POST['nome'] ?? '');
             $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
             $cpf = normalize_cpf($_POST['cpf'] ?? '');
@@ -62,8 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 redirect_with_feedback('A data de saida deve ser maior que a data de entrada.', 'danger');
             }
 
+            // A transacao faz cliente e reserva serem gravados como uma unica operacao.
+            // Se algo der errado no meio, nada fica salvo pela metade.
             $pdo->beginTransaction();
 
+            // Procura se ja existe cliente com o mesmo e-mail ou CPF.
+            // Isso evita criar cliente duplicado antes de inserir a reserva.
             $stmtClienteExistente = $pdo->prepare(
                 'SELECT cpf
                  FROM cliente
@@ -79,11 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($clienteExistente) {
                 $cpfCliente = $clienteExistente['cpf'];
 
+                // Se o e-mail pertence a outro CPF, a reserva e bloqueada para evitar mistura de clientes.
                 if (normalize_cpf($cpfCliente) !== $cpf) {
                     $pdo->rollBack();
                     redirect_with_feedback('Este e-mail ja esta cadastrado com outro CPF.', 'danger');
                 }
 
+                // Cliente encontrado: atualiza nome e e-mail antes de criar a reserva.
                 $stmtCliente = $pdo->prepare(
                     'UPDATE cliente
                      SET nome = :nome, email = :email
@@ -97,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $cpfCliente = $cpf;
 
+                // Cliente novo: cadastra primeiro para depois usar o CPF na reserva.
                 $stmtCliente = $pdo->prepare(
                     'INSERT INTO cliente (cpf, nome, email)
                      VALUES (:cpf, :nome, :email)'
@@ -108,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
 
+            // A reserva referencia a tabela cliente pelo CPF e a tabela chale pelo ID.
             $stmtReserva = $pdo->prepare(
                 'INSERT INTO reserva (id_chale, id_cliente, data_inicio, data_fim, status)
                  VALUES (:id_chale, :id_cliente, :data_inicio, :data_fim, :status)'
@@ -125,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($action === 'update') {
+            // Atualiza no banco os dados editaveis da reserva: chale, periodo e status.
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
             $idChale = filter_input(INPUT_POST, 'id_chale', FILTER_VALIDATE_INT);
             $dataInicio = $_POST['data_inicio'] ?? '';
@@ -152,12 +165,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($action === 'delete') {
+            // Exclusao logica: preserva o historico e apenas troca o status.
             $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
             if (!$id) {
                 redirect_with_feedback('Reserva nao encontrada.', 'danger');
             }
 
+            // Em vez de apagar a reserva, o banco guarda o registro com status "Excluida".
             $stmt = $pdo->prepare('UPDATE reserva SET status = :status WHERE id = :id');
             $stmt->execute([':status' => 'Excluida', ':id' => $id]);
 
@@ -177,6 +192,8 @@ $chales = [];
 $databaseWarning = null;
 
 try {
+    // Consulta principal do painel. Os JOINs unem reserva, cliente e chale
+    // para exibir tudo em uma unica tabela administrativa.
     $reservas = $pdo->query(
         'SELECT
             r.id,
@@ -196,6 +213,7 @@ try {
          ORDER BY r.data_inicio DESC, r.id DESC'
     )->fetchAll();
 
+    // Lista usada nos selects dos formularios de nova/editar reserva.
     $chales = $pdo->query('SELECT id, nome, preco_diaria FROM chale ORDER BY nome')->fetchAll();
 } catch (PDOException $e) {
     $databaseWarning = 'As tabelas de reservas ainda nao foram encontradas. Importe os arquivos database/banco.sql e database/insert.sql para usar o painel.';
@@ -273,7 +291,7 @@ $statusOptions = ['Confirmada', 'Pendente', 'Cancelada', 'Excluida'];
                 <?php
                   $noites = max((int) $reserva['noites'], 0);
                   $valorTotal = $noites * (float) $reserva['preco_diaria'];
-                  $statusClass = strtolower(str_replace([' ', 'í'], ['', 'i'], $reserva['status'] ?? 'pendente'));
+                  $statusClass = strtolower(str_replace(' ', '', $reserva['status'] ?? 'pendente'));
                 ?>
                 <tr data-search="<?= htmlspecialchars(strtolower($reserva['cliente_nome'] . ' ' . $reserva['cliente_email'] . ' ' . $reserva['id_cliente'] . ' ' . $reserva['chale_nome'] . ' ' . $reserva['status']), ENT_QUOTES, 'UTF-8') ?>">
                   <td>
