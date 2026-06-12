@@ -16,6 +16,18 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Controla a exibicao discreta do icone de login na navbar.
+// Ex.: ?acesso=admin libera o icone; ?acesso=sair remove a liberacao.
+if (isset($_GET['acesso'])) {
+    $acessoNavbar = strtolower(trim((string) $_GET['acesso']));
+
+    if ($acessoNavbar === 'admin') {
+        $_SESSION['mostrar_login_admin'] = true;
+    } elseif ($acessoNavbar === 'sair') {
+        unset($_SESSION['mostrar_login_admin'], $_SESSION['admin_logado']);
+    }
+}
+
 // Define o fuso horario usado por datas, reservas e mensagens do sistema.
 date_default_timezone_set('America/Sao_Paulo');
 

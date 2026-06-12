@@ -1,5 +1,3 @@
-
-
 <footer class="footer">
     <div class="container footer__grid">
       <div>

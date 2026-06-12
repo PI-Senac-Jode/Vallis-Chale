@@ -1,5 +1,3 @@
-
-
 <header class="nav">
     <div class="container nav__inner">
       <a href="<?= BASE_URL ?>/index.php" class="nav__brand">
@@ -33,9 +31,8 @@
             </a>
           </div>
         </details>
-      <?php else: ?>
+      <?php elseif (!empty($_SESSION['mostrar_login_admin'])): ?>
         <a href="<?= BASE_URL ?>/pages/login.php" class="nav__account" aria-label="Minha conta"><img src="<?= BASE_URL ?>/src/assets/img/login.svg" alt=""></a>
       <?php endif; ?>
     </div>
   </header>
-

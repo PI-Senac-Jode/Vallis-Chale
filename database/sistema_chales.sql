@@ -1,23 +1,18 @@
--- Cria o banco principal usado pelo arquivo config.php.
 CREATE DATABASE IF NOT EXISTS sistema_chales;
 USE sistema_chales;
 
--- Tabela de categorias usadas para classificar os chales.
 CREATE TABLE categorias_chale (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT
 );
 
--- Tabela de clientes. O CPF e usado como chave primaria.
 CREATE TABLE cliente (
     cpf VARCHAR(14) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Tabela de chales exibidos no site e administrados no painel.
--- categoria_id cria o relacionamento com categorias_chale.
 CREATE TABLE chale (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -30,8 +25,6 @@ CREATE TABLE chale (
     FOREIGN KEY (categoria_id) REFERENCES categorias_chale(id)
 );
 
--- Tabela de reservas feitas pelos clientes.
--- id_chale liga a reserva ao chale e id_cliente liga ao CPF do cliente.
 CREATE TABLE reserva (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_chale INT NOT NULL,

@@ -68,35 +68,25 @@ INSERT INTO reserva (id_chale, id_cliente, data_inicio, data_fim, status) VALUES
 (9, '999.999.999-99', '2026-06-25', '2026-06-27', 'Pendente'),
 (10, '101.101.101-10', '2026-08-01', '2026-08-05', 'Confirmada');
 
- 
 SELECT * FROM chale;
-
- 
 
 -- Listar clientes
 SELECT * FROM cliente;
 
- 
-
 -- Reservas confirmadas
 SELECT * FROM reserva
 WHERE status = 'Confirmada';
-
- 
 
 -- Chalés com diária acima de 500
 SELECT nome, preco_diaria
 FROM chale
 WHERE preco_diaria > 500;
 
- 
-
 -- Quantidade de reservas por status
 SELECT status, COUNT(*) AS quantidade
 FROM reserva
 GROUP BY status;
 
- 
 
 -- Mostrar reservas com nome do cliente e chalé
 SELECT
