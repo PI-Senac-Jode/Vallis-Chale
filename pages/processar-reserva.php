@@ -22,7 +22,7 @@ function montar_mensagem_whatsapp_reserva(array $dadosReserva): string
     $linhas = [
         'Ola! Quero confirmar minha solicitacao de reserva.',
         '',
-        'Codigo da reserva: #' . $dadosReserva['id_reserva'],
+        'Código da reserva: #' . $dadosReserva['id_reserva'],
         'Nome: ' . $dadosReserva['nome'],
         'E-mail: ' . $dadosReserva['email'],
         'Chale: ' . $dadosReserva['chale_nome'],
@@ -44,6 +44,242 @@ function montar_link_whatsapp(string $mensagem): string
     return 'https://wa.me/' . $numeroWhatsapp . '?text=' . rawurlencode($mensagem);
 }
 
+function render_reservation_feedback(string $status, string $title, string $message, array $options = []): void
+{
+    $isSuccess = $status === 'success';
+    $reservationCode = $options['reservation_code'] ?? null;
+    $whatsappLink = $options['whatsapp_link'] ?? '';
+    $details = $options['details'] ?? [];
+    $primaryHref = $isSuccess && $whatsappLink ? $whatsappLink : BASE_URL . '/pages/reservar.php';
+    $primaryLabel = $isSuccess ? 'Abrir WhatsApp' : 'Tentar novamente';
+    $pageTitle = $isSuccess ? 'Reserva enviada | Vallis Chalé' : 'Não foi possível concluir | Vallis Chalé';
+    $statusLabel = $isSuccess ? 'solicitação enviada' : 'atenção necessária';
+    $icon = $isSuccess ? '&#10003;' : '!';
+    $safeWhatsappLink = json_encode($whatsappLink, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+    ?>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="<?= BASE_URL ?>/frontEnd/styles/tokens.css" />
+    <link rel="stylesheet" href="<?= BASE_URL ?>/frontEnd/styles/global.css" />
+    <link rel="stylesheet" href="<?= BASE_URL ?>/frontEnd/styles/sections/nav.css" />
+    <link rel="stylesheet" href="<?= BASE_URL ?>/frontEnd/styles/sections/footer.css" />
+    <style>
+      .reservation-result {
+        min-height: calc(100vh - 220px);
+        display: grid;
+        place-items: center;
+        padding: clamp(3rem, 8vw, 6rem) var(--container-gutter);
+        background:
+          linear-gradient(135deg, rgba(45, 62, 51, 0.08), rgba(213, 147, 46, 0.12)),
+          var(--surface);
+      }
+
+      .reservation-result__panel {
+        width: min(100%, 760px);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(45, 62, 51, 0.12);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-ambient);
+        padding: clamp(1.5rem, 5vw, 3rem);
+        text-align: center;
+      }
+
+      .reservation-result__icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        display: inline-grid;
+        place-items: center;
+        margin-bottom: var(--space-5);
+        border-radius: 50%;
+        background: <?= $isSuccess ? 'var(--primary)' : '#8f2f2f' ?>;
+        color: var(--on-primary);
+        font-size: 2rem;
+        font-weight: 700;
+        box-shadow: 0 16px 30px rgba(45, 62, 51, 0.18);
+      }
+
+      .reservation-result__eyebrow {
+        display: block;
+        margin-bottom: var(--space-3);
+        color: var(--secondary);
+        font-size: var(--label-md);
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .reservation-result__title {
+        margin-bottom: var(--space-4);
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: 0;
+      }
+
+      .reservation-result__message {
+        max-width: 58ch;
+        margin: 0 auto var(--space-6);
+        color: var(--on-surface-variant);
+        font-size: var(--body-lg);
+      }
+
+      .reservation-result__code {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-6);
+        padding: var(--space-3) var(--space-5);
+        border: 1px solid var(--outline-variant);
+        border-radius: var(--radius-md);
+        background: var(--surface-container-low);
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .reservation-result__details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: var(--space-3);
+        margin-bottom: var(--space-6);
+        text-align: left;
+      }
+
+      .reservation-result__detail {
+        padding: var(--space-4);
+        border-radius: var(--radius-md);
+        background: var(--surface-container-low);
+      }
+
+      .reservation-result__detail span {
+        display: block;
+        margin-bottom: var(--space-1);
+        color: var(--on-surface-muted);
+        font-size: var(--label-md);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .reservation-result__detail strong {
+        color: var(--on-surface);
+        font-size: var(--body-sm);
+      }
+
+      .reservation-result__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-3);
+      }
+
+      .reservation-result__button {
+        display: inline-flex;
+        min-height: 3rem;
+        align-items: center;
+        justify-content: center;
+        padding: 0.85rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+      }
+
+      .reservation-result__button--primary {
+        background: var(--primary);
+        color: var(--on-primary);
+      }
+
+      .reservation-result__button--secondary {
+        border: 1px solid var(--outline-variant);
+        background: var(--surface-bright);
+        color: var(--primary);
+      }
+
+      .reservation-result__button:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .reservation-result__hint {
+        margin: var(--space-5) auto 0;
+        color: var(--on-surface-muted);
+        font-size: var(--body-sm);
+      }
+
+      @media (max-width: 560px) {
+        .reservation-result__actions,
+        .reservation-result__button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <?php include __DIR__ . '/../frontEnd/includes/nav.inc.php'; ?>
+
+    <main class="reservation-result">
+      <section class="reservation-result__panel" aria-labelledby="reservation-result-title">
+        <div class="reservation-result__icon" aria-hidden="true"><?= $icon ?></div>
+        <span class="reservation-result__eyebrow"><?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?></span>
+        <h1 id="reservation-result-title" class="reservation-result__title"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
+        <p class="reservation-result__message"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
+
+        <?php if ($reservationCode): ?>
+          <div class="reservation-result__code">
+            <span>Código da reserva</span>
+            <strong>#<?= htmlspecialchars((string) $reservationCode, ENT_QUOTES, 'UTF-8') ?></strong>
+          </div>
+        <?php endif; ?>
+
+        <?php if ($details): ?>
+          <div class="reservation-result__details">
+            <?php foreach ($details as $label => $value): ?>
+              <div class="reservation-result__detail">
+                <span><?= htmlspecialchars((string) $label, ENT_QUOTES, 'UTF-8') ?></span>
+                <strong><?= htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') ?></strong>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+
+        <div class="reservation-result__actions">
+          <a class="reservation-result__button reservation-result__button--primary" href="<?= htmlspecialchars($primaryHref, ENT_QUOTES, 'UTF-8') ?>">
+            <?= htmlspecialchars($primaryLabel, ENT_QUOTES, 'UTF-8') ?>
+          </a>
+          <a class="reservation-result__button reservation-result__button--secondary" href="<?= BASE_URL ?>/index.php">
+            Voltar ao início
+          </a>
+        </div>
+
+        <?php if ($isSuccess): ?>
+          <p class="reservation-result__hint">O WhatsApp será aberto automaticamente com a mensagem pronta.</p>
+        <?php endif; ?>
+      </section>
+    </main>
+
+    <?php include __DIR__ . '/../frontEnd/includes/footer.inc.php'; ?>
+
+    <?php if ($isSuccess && $whatsappLink): ?>
+      <script>
+        const whatsappLink = <?= $safeWhatsappLink ?>;
+
+        window.setTimeout(() => {
+          window.location.href = whatsappLink;
+        }, 2500);
+      </script>
+    <?php endif; ?>
+  </body>
+</html>
+    <?php
+    exit;
+}
+
 // Este arquivo recebe o formulario final da reserva e grava os dados no banco.
 // Ele aceita somente POST para evitar criacao de reservas por acesso direto via URL.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -61,11 +297,19 @@ $data_inicio = $_POST['data_inicio'] ?? '';
 $data_fim = $_POST['data_fim'] ?? '';
 
 if (!$nome || !$email || strlen($cpf) !== 11 || !$id_chale || !$data_inicio || !$data_fim) {
-    die('Erro: dados informados sao invalidos ou incompletos.');
+    render_reservation_feedback(
+        'error',
+        'Dados incompletos',
+        'Revise as informações da reserva e tente enviar novamente.'
+    );
 }
 
 if (strtotime($data_inicio) >= strtotime($data_fim)) {
-    die('Erro: a data de saida deve ser maior que a data de entrada.');
+    render_reservation_feedback(
+        'error',
+        'Período inválido',
+        'A data de saída precisa ser maior que a data de entrada.'
+    );
 }
 
 // A transacao garante que cliente e reserva sejam salvos juntos.
@@ -168,22 +412,40 @@ try {
     ]);
     $linkWhatsapp = montar_link_whatsapp($mensagemWhatsapp);
 
-    // Mostra o codigo da reserva e abre o WhatsApp com a mensagem pronta.
-    $alertMessage = 'Reserva efetuada com sucesso! Guarde o código da sua reserva: ' . $id_reserva_gerado . '. O WhatsApp será aberto com a mensagem pronta.';
-    echo "<script>
-            alert(" . json_encode($alertMessage, JSON_UNESCAPED_SLASHES) . ");
-            window.location.href = " . json_encode($linkWhatsapp, JSON_UNESCAPED_SLASHES) . ";
-          </script>";
-    exit;
+    render_reservation_feedback(
+        'success',
+        'Reserva solicitada com sucesso',
+        'Recebemos seus dados. Guarde o código abaixo e envie a mensagem pelo WhatsApp para finalizar a confirmação.',
+        [
+            'reservation_code' => $id_reserva_gerado,
+            'whatsapp_link' => $linkWhatsapp,
+            'details' => [
+                'Chalé' => $chaleReserva['nome'],
+                'Check-in' => format_date_br($data_inicio),
+                'Check-out' => format_date_br($data_fim),
+                'Noites' => $noites,
+                'Valor estimado' => format_money_br($valorTotal),
+            ],
+        ]
+    );
+
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
 
     if ($e->getMessage() === 'Este e-mail ja esta cadastrado com outro CPF.') {
-        die('Erro: ' . $e->getMessage());
+        render_reservation_feedback(
+            'error',
+        'Cadastro já existente',
+        'Este e-mail já está cadastrado com outro CPF. Confira seus dados ou fale com a equipe da pousada.'
+        );
     }
 
     error_log('Erro ao salvar reserva: ' . $e->getMessage());
-    die('Erro ao salvar a reserva. Tente novamente mais tarde.');
+    render_reservation_feedback(
+        'error',
+        'Não conseguimos salvar sua reserva',
+        'Tente novamente em alguns instantes. Se o problema continuar, entre em contato com a equipe da Vallis Chalé.'
+    );
 }
